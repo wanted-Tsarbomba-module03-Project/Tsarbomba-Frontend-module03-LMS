@@ -1,20 +1,24 @@
 {
   "name": "codebomba",
   "version": "1.0.0",
-  "description": "초기세팅 진행 중\r 읽어야 할 내용은 아래에 추가",
-  "homepage": "https://github.com/wanted-Tsarbomba-module03-Project/Tsarbomba-Frontend-module03-LMS#readme",
-  "bugs": {
-    "url": "https://github.com/wanted-Tsarbomba-module03-Project/Tsarbomba-Frontend-module03-LMS/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wanted-Tsarbomba-module03-Project/Tsarbomba-Frontend-module03-LMS.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.15.0"
+  },
+
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "vite": "^8.0.4"
   }
 }
