@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function UserTotalPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>UserTotalPage</div>;
 }
 
-export default UserTotalPage
+export default UserTotalPage;

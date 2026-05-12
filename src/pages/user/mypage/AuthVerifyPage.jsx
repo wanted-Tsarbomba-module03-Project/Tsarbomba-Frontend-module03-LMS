@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function AuthVerifyPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>AuthVerifyPage</div>;
 }
 
-export default AuthVerifyPage
+export default AuthVerifyPage;

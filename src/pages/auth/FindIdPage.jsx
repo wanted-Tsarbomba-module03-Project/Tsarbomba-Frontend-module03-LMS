@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function FindIdPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>FindIdPage</div>;
 }
 
-export default FindIdPage
+export default FindIdPage;

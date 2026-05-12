@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function CategoryNav() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>CategoryNav</div>;
 }
 
-export default CategoryNav
+export default CategoryNav;

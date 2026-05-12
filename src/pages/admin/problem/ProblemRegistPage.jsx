@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ProblemRegistPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>ProblemRegistPage</div>;
 }
 
-export default ProblemRegistPage
+export default ProblemRegistPage;
