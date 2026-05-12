@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function UserDetailPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>UserDetailPage</div>;
 }
 
-export default UserDetailPage
+export default UserDetailPage;

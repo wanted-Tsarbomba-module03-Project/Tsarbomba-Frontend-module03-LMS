@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ResetPwPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>ResetPwPage</div>;
 }
 
-export default ResetPwPage
+export default ResetPwPage;

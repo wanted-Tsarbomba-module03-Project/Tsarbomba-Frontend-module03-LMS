@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function LecturSolvePage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>LecturSolvePage</div>;
 }
 
-export default LecturSolvePage
+export default LecturSolvePage;

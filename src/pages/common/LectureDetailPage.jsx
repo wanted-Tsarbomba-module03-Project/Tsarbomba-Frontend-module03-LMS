@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function LectureDetailPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>LectureDetailPage</div>;
 }
 
-export default LectureDetailPage
+export default LectureDetailPage;

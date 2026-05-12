@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function ProblemTotalPage() {
-    return (
-        <div>
-
-        </div>
-    )
+  return <div>ProblemTotalPage</div>;
 }
 
-export default ProblemTotalPage
+export default ProblemTotalPage;
