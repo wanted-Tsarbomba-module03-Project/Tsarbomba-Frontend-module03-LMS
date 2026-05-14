@@ -3,8 +3,9 @@ import SearchBar from "../common/Searchbar";
 import { useNavigate } from "react-router-dom";
 
 import "./Header.css";
+import "../common/reset.css";
 import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
-import BombLogo from "../../assets/img/bomb-Icon.svg";
+import BombLogo from "../../assets/img/bluebomb-Icon.svg";
 
 function Header() {
   return (

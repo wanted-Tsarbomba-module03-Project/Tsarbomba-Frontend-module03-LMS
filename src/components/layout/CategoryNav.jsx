@@ -1,5 +1,6 @@
 import React from "react";
 import "./CategoryNav.css";
+import "../common/reset.css";
 
 function CategoryNav() {
   return (
