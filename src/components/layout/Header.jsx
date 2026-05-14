@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import "./Header.css";
 import "../common/reset.css";
 import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
-import BombLogo from "../../assets/img/bluebomb-Icon.svg";
+import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
+import WhitebombLogo from "../../assets/img/WhiteBomb-Icon.svg";
 
 function Header() {
   return (
@@ -28,7 +29,7 @@ function Header() {
             <p className="header-text">문제풀이</p>
           </div>
           <div className="header-btn">
-            <img src={BombLogo} alt="로그인" className="header-bomb-img" />
+            <img src={BluebombLogo} alt="로그인" className="header-bomb-img" />
             <p className="header-text">로그인</p>
           </div>
         </div>
