@@ -16,9 +16,9 @@ function CategoryNav() {
 
   return (
     <nav className="category-nav">
-      <div className="nav-content">
+      <div className="category-nav-content">
         {/* 좌측: 카테고리 */}
-        <div className="nav-left">
+        <div className="category-nav-left">
           {categories.map((item, index) => (
             <button
               key={index}
@@ -30,7 +30,7 @@ function CategoryNav() {
         </div>
 
         {/* 우측: 정렬 드롭다운 */}
-        <div className="nav-right">
+        <div className="category-nav-right">
           <select className="dropdown">
             <option>전체 정렬</option>
             <option>최신순</option>

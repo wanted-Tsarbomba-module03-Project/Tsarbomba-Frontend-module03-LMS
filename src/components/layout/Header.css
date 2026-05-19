@@ -3,60 +3,89 @@
   height: 60px;
   display: flex;
   align-items: center;
-  justify-content: right;
+  justify-content: center;
   color: #1a237e;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 15px;
 }
 
 .header-content {
-  background-color: white;
+  background-color: #ffffff;
   width: 100%;
+  max-width: 1200px;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .header-left {
-  width: 200px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-logo-img {
+  cursor: pointer;
+  margin-left: 10px;
+  height: 40px;
+}
+
+.header-middle {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.header-middle > * {
+  width: 100%;
+  max-width: 450px;
+}
+
 .header-right {
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: right;
-  margin-right: 15px;
-}
-
-.header-btn {
-  display: flex;
-  margin: 0px 10px;
-  padding: 5px;
-  border-radius: 8px;
-  border: 1px solid #1a237e;
-  background-color: white;
-}
-
-.header-btn:hover {
-  border-radius: 5px;
-  background-color: #1a237e;
-  border-radius: 8px;
-  color: white;
-  cursor: pointer;
-}
-
-.header-btn:hover .header-bomb-img {
-  content: url("../../assets/img/whitebomb-Icon.svg");
+  flex-shrink: 0;
 }
 
 .header-text-btn {
-  margin: 0px 10px;
+  margin: 0 10px;
   font-size: 16px;
+  color: #1f2937;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .header-text {
   width: 100%;
   cursor: pointer;
+}
+
+.header-login-btn {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: 1px solid #1a237e;
+  background-color: #ffffff;
+  color: #1a237e;
+  white-space: nowrap;
+}
+
+.header-login-btn:hover {
+  background-color: #1a237e;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.header-login-btn:hover .header-bomb-img {
+  content: url("../../assets/img/whitebomb-Icon.svg");
 }
 
 .header-bomb-img {
@@ -66,6 +95,32 @@
   object-fit: contain;
 }
 
-.header-logo-img {
-  cursor: pointer;
+@media (max-width: 1024px) {
+  .header-logo-img {
+    height: 24px;
+    margin-left: 0;
+  }
+  .header-middle > * {
+    max-width: 240px;
+  }
+  .header-text-btn {
+    font-size: 13px;
+    margin: 0 6px;
+  }
+  .header-btn {
+    padding: 5px 8px;
+    font-size: 13px;
+    margin: 0 6px;
+    border-radius: 6px;
+  }
+  .header-bomb-img {
+    width: 14px;
+    height: 14px;
+  }
+  .header-middle {
+    margin: 0 15px;
+  }
+  .header-content {
+    padding: 0 15px;
+  }
 }

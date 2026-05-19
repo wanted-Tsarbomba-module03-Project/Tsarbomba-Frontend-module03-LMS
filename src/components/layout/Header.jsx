@@ -1,37 +1,68 @@
 import React from "react";
 import SearchBar from "../common/Searchbar";
 import { useNavigate } from "react-router-dom";
-
 import "./Header.css";
 import "../common/reset.css";
 import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
 import WhitebombLogo from "../../assets/img/WhiteBomb-Icon.svg";
 
-function Header() {
+function Header({ simple }) {
+  const navigate = useNavigate();
+
+  if (simple) {
+    return (
+      <header className="header">
+        <div className="header-content">
+          <div className="header-left">
+            <img
+              src={MainLogo}
+              className="header-logo-img"
+              alt="로고"
+              onClick={() => navigate("/")}
+            />
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="header">
       <div className="header-content">
-        {/* 좌측: 메인 로고 */}
         <div className="header-left">
-          <img src={MainLogo} className="header-logo-img" />
+          <img
+            src={MainLogo}
+            className="header-logo-img"
+            alt="로고"
+            onClick={() => navigate("/")}
+          />
         </div>
 
-        {/* 중앙: 검색바 */}
-        <SearchBar />
+        <div className="header-middle">
+          <SearchBar />
+        </div>
 
-        {/* 우측: 내강의실, 문제풀이, 로그인(프로필) */}
         <div className="header-right">
-          <div className="header-text-btn">
-            <p className="header-text">내 강의실</p>
-          </div>
-          <div className="header-text-btn">
-            <p className="header-text">문제풀이</p>
-          </div>
-          <div className="header-btn">
-            <img src={BluebombLogo} alt="로그인" className="header-bomb-img" />
-            <p className="header-text">로그인</p>
-          </div>
+          <span
+            className="header-text-btn"
+            onClick={() => navigate("/user/lectures")}
+          >
+            내 강의실
+          </span>
+          <span
+            className="header-text-btn"
+            onClick={() => navigate("/user/problems")}
+          >
+            문제풀이
+          </span>
+          <button
+            className="header-login-btn"
+            onClick={() => navigate("/login")}
+          >
+            <img src={BluebombLogo} className="header-bomb-img" alt="아이콘" />
+            로그인
+          </button>
         </div>
       </div>
     </header>
