@@ -25,11 +25,14 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .header-logo-img {
   cursor: pointer;
   margin-left: 10px;
+  margin-right: 5px;
   height: 40px;
 }
 
@@ -96,10 +99,6 @@
 }
 
 @media (max-width: 1024px) {
-  .header-logo-img {
-    height: 24px;
-    margin-left: 0;
-  }
   .header-middle > * {
     max-width: 240px;
   }

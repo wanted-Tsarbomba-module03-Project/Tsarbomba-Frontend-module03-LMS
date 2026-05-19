@@ -3,7 +3,8 @@ import SearchBar from "../common/Searchbar";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
 import "../common/reset.css";
-import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
+// import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
+import Logo from "../../assets/img/logo-Icon.png";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
 import WhitebombLogo from "../../assets/img/WhiteBomb-Icon.svg";
 
@@ -16,7 +17,7 @@ function Header({ isSimple }) {
         <div className="header-content">
           <div className="header-left">
             <img
-              src={MainLogo}
+              src={Logo}
               className="header-logo-img"
               alt="로고"
               onClick={() => navigate("/")}
@@ -32,11 +33,12 @@ function Header({ isSimple }) {
       <div className="header-content">
         <div className="header-left">
           <img
-            src={MainLogo}
+            src={Logo}
             className="header-logo-img"
             alt="로고"
             onClick={() => navigate("/")}
           />
+          codebomba
         </div>
 
         <div className="header-middle">
