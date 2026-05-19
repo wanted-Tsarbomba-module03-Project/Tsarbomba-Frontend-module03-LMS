@@ -1,0 +1,49 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* 공통 색상 */
+:root {
+  --table-hover: #f0f0f0;
+  --table-border: #e8e8e8;
+}
+
+thead th {
+  background-color: #f3f4f6;
+  height: 50px;
+  border-top: 3px solid var(--table-border);
+  border-bottom: 1px solid var(--table-border);
+  text-align: center;
+  vertical-align: middle;
+  font-weight: 600;
+}
+
+tbody td {
+  height: 50px;
+  border-bottom: 1px solid var(--table-border);
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+}
+
+tbody tr:hover td {
+  background-color: var(--table-hover);
+  cursor: pointer;
+}
+
+td,
+th {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-content {
+  padding: 8px;
+  box-sizing: border-box;
+
+  white-space: normal;
+  word-break: break-word;
+}

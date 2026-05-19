@@ -6,69 +6,68 @@
 
 ```bash
 [src]
- ├──[assets]               
- │    ├──[img]             
- │    └──[font]            
+ ├──[assets]
+ │    ├──[img]
+ │    └──[font]
  │
- ├──[components]           
- │    ├──[common]          
+ ├──[components]
+ │    ├──[common]
  │    │    ├── TwoButtonModal.jsx   # [모달] 확인/취소 버튼형
  │    │    ├── OneButtonModal.jsx   # [모달] 확인 버튼형
- │    │    ├── DeleteModal.jsx      # [모달] 삭제 확인 전용
- │    │    ├── WarningModal.jsx     # [모달] 경고/에러 알림용
+ │    │    ├── WarningModal.jsx     # [모달] 경고/에러/삭제확인 알림용
  │    │    ├── Searchbar.jsx        # [공통] 검색창
  │    │    └── PasswordForm.jsx     # [폼] 비밀번호 재확인
- │    ├──[layout]         
+ │    ├──[layout]
  │    │    ├── Header.jsx           # 헤더
  │    │    ├── CategoryNav.jsx      # 메인 카테고리 필터 바
  │    │    ├── Sidebar.jsx          # 마이페이지/관리자용 측면 메뉴 바
  │    │    └── Footer.jsx           # 하단 정보 바
- │    ├──[lecture]   
+ │    ├──[lecture]
  │    │    ├── LectureForm.jsx      # 강의 등록 폼
  │    │    └── MyLectureItem.jsx    # 모드 (card | list)
- │    ├──[problem]         
+ │    ├──[problem]
  │    │    ├── ProblemList.jsx      # 문제 목록용 카드
  │    │    └── ProblemForm.jsx      # 문제 등록 폼
- │    └──[admin]           
+ │    └──[admin]
  │         └── UserItem.jsx         # 회원 아이템
- ├──[hooks]                
+ ├──[hooks]
  │    ├── useModal.jsx              # 모달 열고 닫는 로직 제어
  │    └── useAuth.jsx               # 로그인 상태 및 유저 권한(User/Admin) 체크
  │
- ├──[layouts]              
+ ├──[layouts]
  │    ├── MainLayout.jsx            # 헤더 + 카테고리바가 있는 기본 틀
  │    ├── MypageLayout.jsx          # 헤더 + 마이페이지 사이드바가 있는 틀
  │    ├── AdminLayout.jsx           # 헤더 + 관리자 사이드바가 있는 틀
  │    └── EmptyLayout.jsx           # 로그인/에러페이지 등 최소 UI 틀
  │
- ├──[pages]                
- │    ├──[auth]           
+ ├──[pages]
+ │    ├──[auth]
  │    │    ├── LoginPage.jsx          # 로그인
  │    │    ├── SignupPage.jsx         # 회원가입
  │    │    ├── FindIdPage.jsx         # 아이디 찾기
  │    │    └── ResetPwPage.jsx        # 비밀번호 재설정
- │    ├──[common]         
+ │    ├──[common]
  │    │    ├── HomePage.jsx           # 메인 페이지
  │    │    ├── LectureTotalPage.jsx   # 강의 전체 목록 조회
  │    │    ├── LectureDetailPage.jsx  # 강의 상세 정보 및 소개 / 수강 신청(user) / 수정 삭제 버튼(admin)
  │    │    ├── ProblemTotalPage.jsx   # 문제 전체 목록
  │    │    ├── ProblemDetailPage.jsx  # 문제 상세 정보 / 실제 문제 풀이(user)
- │    │    └── ErrorPage.jsx          # 통합 에러 페이지          
- │    ├──[user]         
- │    │    ├──[lecture]            
+ │    │    └── ErrorPage.jsx          # 통합 에러 페이지
+ │    ├──[user]
+ │    │    ├──[lecture]
  │    │    │    └── LectureSolvePage.jsx   # 강의실 내 임시 문제풀이
- │    │    └──[mypage]              
+ │    │    └──[mypage]
  │    │         ├── MyLecturePage.jsx      # 내 강의실
  │    │         ├── MypageProfile.jsx      # 프로필 조회
  │    │         ├── ProfileEditPage.jsx    # 정보 수정 및 탈퇴
  │    │         └── AuthVerifyPage.jsx     # 비밀번호 재확인 관문
- │    └──[admin]          
- │         ├──[user]                
+ │    └──[admin]
+ │         ├──[user]
  │         │    ├── UserTotalPage.jsx      # 회원 전체 목록
  │         │    └── UserDetailPage.jsx     # 회원 상세 정보
- │         ├──[lecture]             
+ │         ├──[lecture]
  │         │    └── LectureRegistPage.jsx  # 강의 등록/수정 폼
- │         └──[problem]             
+ │         └──[problem]
  │              └── ProblemRegistPage.jsx  # 문제 등록/수정 폼
  │
  ├──[services]             # API 통신 로직 (Axios/Fetch 등)
@@ -90,17 +89,18 @@
 
 작업은 아래 순서에 따라 진행합니다.
 
-| 단계 | 내용 |
-|:---:|---|
-| 1️⃣ | **Issue 작성** — 담당자, 라벨 필수 |
-| 2️⃣ | **Branch 생성** — Branch 작성 규칙 확인 |
-| 3️⃣ | **작업 시작** — Coding Convention 준수 |
-| 4️⃣ | **Commit & Push** — Commit Message 규칙 확인 |
-| 5️⃣ | **Pull Request** — 리뷰어, 담당자, 라벨 필수 |
+| 단계 | 내용                                         |
+| :--: | -------------------------------------------- |
+|  1️⃣  | **Issue 작성** — 담당자, 라벨 필수           |
+|  2️⃣  | **Branch 생성** — Branch 작성 규칙 확인      |
+|  3️⃣  | **작업 시작** — Coding Convention 준수       |
+|  4️⃣  | **Commit & Push** — Commit Message 규칙 확인 |
+|  5️⃣  | **Pull Request** — 리뷰어, 담당자, 라벨 필수 |
 
 <br>
 
 ## 📝 Issue 작성 규칙
+
 설명 : 이슈 내용 기술
 작업할 내용 : 작업할 내용 기술
 기타 : 기타사항 기술
@@ -108,6 +108,7 @@
 <br>
 
 ## 🌿 Branch 작성 규칙
+
 기능 구현
 feature/페이지
 
@@ -123,19 +124,21 @@ fix/페이지
 
 ### PREFIX 정리
 
-| PREFIX | 설명 |
-|---|---|
-| `[FEATURE]` | 새로운 기능 추가 |
-| `[FIX]` | 오류를 고친 경우 |
-| `[RENAME]` | 파일 혹은 폴더명을 수정하는 경우 |
-| `[STYLE]` | 코드 변경 없이 자잘한 수정을 하는 경우 |
+| PREFIX      | 설명                                   |
+| ----------- | -------------------------------------- |
+| `[FEATURE]` | 새로운 기능 추가                       |
+| `[FIX]`     | 오류를 고친 경우                       |
+| `[RENAME]`  | 파일 혹은 폴더명을 수정하는 경우       |
+| `[STYLE]`   | 코드 변경 없이 자잘한 수정을 하는 경우 |
 
 ### 작성 형식
+
 [PREFIX] 제목 ← 필수
 
 상세 내용 ← 선택
 
 ### 작성 예시
+
 예시 1 — 간단하게
 [FEATURE] 회원가입 기능 추가
 
@@ -146,6 +149,7 @@ fix/페이지
 <br>
 
 ## 🔀 Pull Request 작성 규칙
+
 관련 이슈 : 본인이 작성한 이슈 번호
 작업 유형 : 작업 내용에 따라 유형 선택
 작업 내용 : 작업한 내용 기술
@@ -159,11 +163,168 @@ fix/페이지
 
 ### 1. 네이밍 규칙
 
-
 ### 2. 포맷 규칙
-
 
 ### 3. 주석 작성법
 
-
 ### 4. 파일 코드 순서
+
+<br>
+
+## 범용 컴포넌트 사용 예시
+
+### List
+
+각 props 역할은:
+data → 테이블에 출력할 데이터 배열
+columns → 컬럼 정의
+onRowClick → 행 클릭 시 실행할 함수
+
+기본 예제:
+
+```javascript
+import React from "react";
+import List from "../../components/common/List";
+
+const Page = () => {
+  // 테이블 데이터
+  const data = [
+    {
+      id: 1,
+      name: "홍길동",
+      age: 25,
+      email: "hong@test.com",
+    },
+    {
+      id: 2,
+      name: "김철수",
+      age: 30,
+      email: "kim@test.com",
+    },
+  ];
+
+  // 컬럼 정의
+  const columns = [
+    {
+      key: "index",
+      label: "번호",
+    },
+    {
+      key: "name",
+      label: "이름",
+    },
+    {
+      key: "age",
+      label: "나이",
+    },
+    {
+      key: "email",
+      label: "이메일",
+    },
+  ];
+
+  // 행 클릭 이벤트
+  const handleRowClick = (item) => {
+    console.log(item);
+  };
+
+  return (
+    <div>
+      <h1>회원 목록</h1>
+
+      <List data={data} columns={columns} onRowClick={handleRowClick} />
+    </div>
+  );
+};
+
+export default Page;
+```
+
+### Modal
+
+원버튼 예시
+
+```javascript
+import OneButtonModal from "./components/common/OneButtonModal";
+
+function App() {
+  // 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 모달 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <>
+      {/* 모달 열기 버튼 */}
+      <button onClick={openModal}>모달 열기</button>
+
+      {/* 원버튼 모달 */}
+      <OneButtonModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        modalTitle="알림"
+        modalContent="원버튼 모달이 정상적으로 실행되었습니다."
+      />
+    </>
+  );
+}
+
+export default App;
+```
+
+투버튼 예시
+
+```javascript
+import TwoButtonModal from "./components/common/TwoButtonModal";
+
+function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  // 모달 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 확인 버튼 클릭
+  const handleConfirm = () => {
+    // 모달 닫기
+    setIsModalOpen(false);
+
+    // 페이지 이동
+    navigate("/test");
+  };
+
+  return (
+    <>
+      {/* 모달 열기 버튼 */}
+      <button onClick={openModal}>투버튼 모달 열기</button>
+
+      {/* 투버튼 모달 */}
+      <TwoButtonModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={handleConfirm}
+        modalTitle="페이지 이동"
+        modalContent="test 페이지로 이동하시겠습니까?"
+      />
+    </>
+  );
+}
+
+export default App;
+```
