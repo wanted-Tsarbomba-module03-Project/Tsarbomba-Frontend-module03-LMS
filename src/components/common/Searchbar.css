@@ -12,9 +12,9 @@
     clamp(12px, 0.8vw, 16px);
 
   border-radius: clamp(6px, 0.4vw, 8px);
-  border: 1px solid #e5e5e5;
+  border: 1px solid #e8e8e8;
 
-  background: #f9fafb;
+  background-color: white;
 }
 
 .search-button {
