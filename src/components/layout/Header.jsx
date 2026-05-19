@@ -7,10 +7,10 @@ import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
 import WhitebombLogo from "../../assets/img/WhiteBomb-Icon.svg";
 
-function Header({ simple }) {
+function Header({ isSimple }) {
   const navigate = useNavigate();
 
-  if (simple) {
+  if (isSimple) {
     return (
       <header className="header">
         <div className="header-content">
