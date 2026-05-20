@@ -64,6 +64,7 @@
   color: #1f2937;
   border-radius: 8px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .sidebar-item:hover {
