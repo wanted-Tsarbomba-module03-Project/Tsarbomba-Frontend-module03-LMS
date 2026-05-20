@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
 import "./Sidebar.css";
 
@@ -9,22 +10,75 @@ function Sidebar({ isOpen, userNickname = "게스트" }) {
   const AdminMenu = () => (
     <div className="sidebar-content">
       <h3 className="sidebar-title">관리페이지</h3>
+
       <ul className="sidebar-list">
-        <li
-          className={`sidebar-item ${currentPath.includes("/admin/users") ? "active" : ""}`}
-        >
-          회원 관리
+
+        <li>
+          <NavLink
+            to="/admin/users"
+            className={ ({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            회원 관리
+          </NavLink>
         </li>
-        <li
-          className={`sidebar-item ${currentPath.includes("/admin/lectures") ? "active" : ""}`}
-        >
-          강의 관리
+
+        <li>
+          <NavLink
+            to="/admin/lectures"
+            className={ ({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            강의 관리
+          </NavLink>
         </li>
-        <li
-          className={`sidebar-item ${currentPath.includes("/admin/problems") ? "active" : ""}`}
-        >
-          문제 관리
+
+        <li>
+          <NavLink
+            to="/admin/problems"
+            className={ ({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            문제 관리
+          </NavLink>
         </li>
+
+        <li>
+          <NavLink
+            to="/admin/badges"
+            className={ ({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            뱃지 관리
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink
+            to="/admin/rules"
+            className={ ({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            규칙 관리
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink
+            to="/admin/alrams"
+            className={ ({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            알람 관리
+          </NavLink>
+        </li>
+
       </ul>
     </div>
   );
@@ -34,13 +88,13 @@ function Sidebar({ isOpen, userNickname = "게스트" }) {
     <div className="sidebar-content">
       <div className="profile-section">
         <div className="profile-img-box">
-          <img src={BluebombLogo} alt="프로필" className="profile-img" />
+          <img src={ BluebombLogo } alt="프로필" className="profile-img" />
         </div>
-        <span className="profile-nickname">{userNickname}</span>
+        <span className="profile-nickname">{ userNickname }</span>
       </div>
       <ul className="sidebar-list">
         <li
-          className={`sidebar-item ${currentPath.includes("/profile") ? "active" : ""}`}
+          className={ `sidebar-item ${currentPath.includes("/profile") ? "active" : ""}` }
         >
           내 소개
         </li>
@@ -77,10 +131,10 @@ function Sidebar({ isOpen, userNickname = "게스트" }) {
   }
 
   return (
-    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
-      {isAdmin && AdminMenu()}
-      {isMypage && MypageMenu()}
-      {isCategory && problemCategoryMenu()}
+    <aside className={ `sidebar ${isOpen ? "open" : ""}` }>
+      { isAdmin && AdminMenu() }
+      { isMypage && MypageMenu() }
+      { isCategory && problemCategoryMenu() }
     </aside>
   );
 }
