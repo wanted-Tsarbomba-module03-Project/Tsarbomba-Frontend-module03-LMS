@@ -22,9 +22,9 @@ function LoginPage() {
   const [passwordErr, setPasswordErr] = useState("");
   const [loginCommonErr, setLoginCommonErr] = useState("");
 
-  const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/google";
-  };
+  // const handleGoogleLogin = () => {
+  //   window.location.href =
+  // };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
