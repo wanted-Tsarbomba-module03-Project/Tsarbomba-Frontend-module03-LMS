@@ -22,9 +22,9 @@ function LoginPage() {
   const [passwordErr, setPasswordErr] = useState("");
   const [loginCommonErr, setLoginCommonErr] = useState("");
 
-  // const handleGoogleLogin = () => {
-  //   window.location.href =
-  // };
+  const handleGoogleLogin = () => {
+    window.location.href = `${BASE_URL}/oauth2/authorization/google`;
+  };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();

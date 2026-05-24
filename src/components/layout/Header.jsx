@@ -1,16 +1,78 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SearchBar from "../common/Searchbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import TwoButtonModal from "../../components/common/TwoButtonModal";
+import { logoutService } from "../../services/authService";
 import "./Header.css";
 import "../common/reset.css";
-// import MainLogo from "../../assets/img/codebomba-logo-Icon.svg";
 import Logo from "../../assets/img/logo-Icon.png";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
-import WhitebombLogo from "../../assets/img/WhiteBomb-Icon.svg";
 
 function Header({ isSimple }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("userNickname"),
+  );
+  const [nickname, setNickname] = useState(
+    localStorage.getItem("userNickname") || "닉네임",
+  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  // 임시 - 닉네임 가져오기
+  useEffect(() => {
+    const savedNickname = localStorage.getItem("userNickname");
+    if (savedNickname) {
+      setIsLoggedIn(true);
+      setNickname(savedNickname);
+    } else {
+      setIsLoggedIn(false);
+      setNickname("닉네임");
+    }
+  }, [location]);
+
+  // 드롭다운, 모달
+  const handleLogoutClick = () => {
+    setIsDropdownOpen(false);
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleLogoutClose = () => {
+    setIsLogoutModalOpen(false);
+  };
+
+  const handleLogoutConfirm = async () => {
+    setIsLogoutModalOpen(false);
+
+    // 쿠키 삭제
+    localStorage.clear();
+    sessionStorage.clear();
+
+    const deleteCookie = (name) => {
+      document.cookie =
+        name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+      document.cookie =
+        name +
+        "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=" +
+        window.location.hostname +
+        ";";
+    };
+
+    deleteCookie("accessToken");
+    deleteCookie("refreshToken");
+    deleteCookie("token");
+    deleteCookie("JSESSIONID");
+
+    setIsLoggedIn(false);
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 500);
+  };
+
+  /* 로고만 */
   if (isSimple) {
     return (
       <header className="header">
@@ -28,6 +90,7 @@ function Header({ isSimple }) {
     );
   }
 
+  /* 헤더 */
   return (
     <header className="header">
       <div className="header-content">
@@ -45,6 +108,7 @@ function Header({ isSimple }) {
           <SearchBar />
         </div>
 
+        {/* 글씨 */}
         <div className="header-right">
           <span
             className="header-text-btn"
@@ -58,15 +122,64 @@ function Header({ isSimple }) {
           >
             문제풀이
           </span>
-          <button
-            className="header-login-btn"
-            onClick={() => navigate("/login")}
-          >
-            <img src={BluebombLogo} className="header-bomb-img" alt="아이콘" />
-            로그인
-          </button>
+
+          {!isLoggedIn ? (
+            <button
+              className="header-login-btn"
+              onClick={() => navigate("/login")}
+            >
+              <img
+                src={BluebombLogo}
+                className="header-bomb-img"
+                alt="아이콘"
+              />
+              로그인
+            </button>
+          ) : (
+            <div className="header-user-menu-container">
+              <button
+                className={`header-login-btn header-user-btn ${isDropdownOpen ? "active" : ""}`}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <img
+                  src={BluebombLogo}
+                  className="header-bomb-img"
+                  alt="아이콘"
+                />
+                {nickname}
+              </button>
+              {/* 드롭다운 */}
+              {isDropdownOpen && (
+                <div className="header-dropdown-box">
+                  <div
+                    className="header-dropdown-item"
+                    onClick={() => {
+                      navigate("/user/profile");
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    마이페이지
+                  </div>
+                  <div
+                    className="header-dropdown-item"
+                    onClick={handleLogoutClick}
+                  >
+                    로그아웃
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      <TwoButtonModal
+        isOpen={isLogoutModalOpen}
+        onClose={handleLogoutClose}
+        onConfirm={handleLogoutConfirm}
+        modalTitle="로그아웃"
+        modalContent="로그아웃 하시겠습니까?"
+      />
     </header>
   );
 }
