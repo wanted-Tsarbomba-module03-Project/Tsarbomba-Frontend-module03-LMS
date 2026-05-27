@@ -1,11 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
 import "./Sidebar.css";
 
-function Sidebar({ isOpen, userNickname = "게스트" }) {
+function Sidebar({ isOpen, userNickname: propsNickname }) {
   const location = useLocation();
   const currentPath = location.pathname;
+
+  // 닉네임
+  const [nickname, setNickname] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("userNickname") || propsNickname || "";
+    }
+    return propsNickname || "";
+  });
+
+  useEffect(() => {
+    const updateNickname = () => {
+      const savedNickname = localStorage.getItem("userNickname");
+      if (savedNickname) {
+        setNickname(savedNickname);
+      }
+    };
+
+    updateNickname();
+
+    window.addEventListener("loginSuccess", updateNickname);
+    window.addEventListener("storage", updateNickname);
+
+    return () => {
+      window.removeEventListener("loginSuccess", updateNickname);
+      window.removeEventListener("storage", updateNickname);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (propsNickname) {
+      setNickname(propsNickname);
+    }
+  }, [propsNickname]);
 
   /* 관리자 페이지 사이드바 */
   const AdminMenu = () => (
@@ -76,14 +109,14 @@ function Sidebar({ isOpen, userNickname = "게스트" }) {
     </div>
   );
 
-  /* 마이페이지 사이드바 컴포넌트 */
+  /* 마이페이지 사이드바 */
   const MypageMenu = () => (
     <div className="sidebar-content">
       <div className="profile-section">
         <div className="profile-img-box">
           <img src={BluebombLogo} alt="프로필" className="profile-img" />
         </div>
-        <span className="profile-nickname">{userNickname}</span>
+        <span className="profile-nickname">{nickname}</span>
       </div>
       <ul className="sidebar-list">
         <li>

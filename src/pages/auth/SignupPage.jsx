@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signup } from "../../services/authService";
+import {
+  signup,
+  checkEmail,
+  checkNickname,
+  sendVerificationCode,
+  verifyCode,
+} from "../../services/authService";
 import OneButtonModal from "../../components/common/OneButtonModal";
 import "./SignupPage.css";
 
 function SignupPage() {
   const navigate = useNavigate();
 
-  // 데이터
+  // 회원가입 폼 데이터
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [pw, setPw] = useState("");
@@ -16,12 +22,19 @@ function SignupPage() {
   const [nickname, setNickname] = useState("");
   const [phone, setPhone] = useState("");
 
-  // 화면, 모달
+  // 검증 및 화면 제어 상태
   const [isSent, setIsSent] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
-  // 에러
+  // 알림 모달
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContent, setModalContent] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // 에러 메시지
   const [emailErr, setEmailErr] = useState("");
   const [codeErr, setCodeErr] = useState("");
   const [pwErr, setPwErr] = useState("");
@@ -30,52 +43,190 @@ function SignupPage() {
   const [nicknameErr, setNicknameErr] = useState("");
   const [phoneErr, setPhoneErr] = useState("");
 
-  // 임시 - 이메일 인증번호 전송
-  const handleSendEmail = () => {
+  // 이메일 양식 체크
+  const checkEmailFormat = (emailValue) => {
+    if (!emailValue) {
+      setEmailErr("이메일을 입력해주세요.");
+      return false;
+    }
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(emailValue)) {
+      setEmailErr("이메일 형식이 올바르지 않습니다. (예: user@email.com)");
+      return false;
+    }
+    setEmailErr("");
+    return true;
+  };
+
+  // 비밀번호 양식 체크
+  const validatePasswordOnBlur = (value) => {
+    if (!value) {
+      setPwErr("비밀번호는 필수입니다.");
+      return;
+    }
+    const pwRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;"'<>,.?/~`\\|-]).{8,}$/;
+    if (!pwRegex.test(value)) {
+      setPwErr(
+        "비밀번호는 8자 이상, 영문/숫자/특수문자를 모두 포함해야 합니다.",
+      );
+    } else {
+      setPwErr("");
+    }
+  };
+
+  // 비밀번호 확인 실시간 체크
+  const validateConfirmOnBlur = (value) => {
+    if (!value) {
+      setConfirmErr("비밀번호 확인은 필수입니다.");
+      return;
+    }
+    if (pw !== value) {
+      setConfirmErr("비밀번호가 일치하지 않습니다.");
+    } else {
+      setConfirmErr("");
+    }
+  };
+
+  // 전화번호 양식 체크
+  const validatePhoneOnBlur = (value) => {
+    if (!value) {
+      setPhoneErr("전화번호는 필수입니다.");
+      return;
+    }
+    const phoneRegex = /^01[0-9]-\d{3,4}-\d{4}$/;
+    if (!phoneRegex.test(value)) {
+      setPhoneErr("전화번호 형식이 올바르지 않습니다. (예: 010-1234-5678)");
+    } else {
+      setPhoneErr("");
+    }
+  };
+
+  // 1. 이메일 중복 체크
+  const handleEmailCheck = async () => {
+    const isFormatValid = checkEmailFormat(email);
+    if (!isFormatValid) return;
+
+    try {
+      const res = await checkEmail(email);
+      const isAvailable =
+        res === true || res?.data === true || res?.data?.available === true;
+
+      if (isAvailable) {
+        setModalTitle("중복 확인 완료");
+        setModalContent("사용 가능한 이메일입니다.");
+        setIsSuccess(false);
+        setModalOpen(true);
+        setIsEmailChecked(true);
+        setEmailErr("");
+      } else {
+        setEmailErr("이미 사용 중인 이메일입니다.");
+        setIsEmailChecked(false);
+      }
+    } catch (err) {
+      setEmailErr("이미 사용 중인 이메일입니다.");
+      setIsEmailChecked(false);
+    }
+  };
+
+  // 2. 닉네임 중복 체크
+  const handleNicknameCheck = async () => {
+    if (!nickname) {
+      setNicknameErr("닉네임을 입력해주세요.");
+      return;
+    }
+    try {
+      const res = await checkNickname(nickname);
+      const isAvailable =
+        res === true || res?.data === true || res?.data?.available === true;
+
+      if (isAvailable) {
+        setModalTitle("중복 확인 완료");
+        setModalContent("사용 가능한 닉네임입니다.");
+        setIsSuccess(false);
+        setModalOpen(true);
+        setIsNicknameChecked(true);
+        setNicknameErr("");
+      } else {
+        setNicknameErr("이미 사용 중인 닉네임입니다.");
+        setIsNicknameChecked(false);
+      }
+    } catch (err) {
+      setNicknameErr("이미 사용 중인 닉네임입니다.");
+      setIsNicknameChecked(false);
+    }
+  };
+
+  // 3. 이메일 인증번호 전송
+  const handleSendEmail = async () => {
     if (!email) {
       setEmailErr("이메일을 입력해주세요.");
       return;
     }
-    setIsSent(true);
-    setEmailErr("");
+    if (!isEmailChecked) {
+      setEmailErr("이메일 중복확인을 먼저 완료해주세요.");
+      return;
+    }
+    try {
+      await sendVerificationCode(email);
+      setIsSent(true);
+      setEmailErr("");
+      setModalTitle("인증번호 발송");
+      setModalContent("입력하신 이메일로 인증번호가 발송되었습니다.");
+      setIsSuccess(false);
+      setModalOpen(true);
+    } catch (err) {
+      if (err.message.includes("횟수") || err.message.includes("AUT-014")) {
+        setEmailErr("이메일 발송 횟수를 초과했습니다.");
+      } else {
+        setEmailErr(err.message || "인증번호 발송 중 오류가 발생했습니다.");
+      }
+    }
   };
 
-  // 임시 - 인증번호 확인
-  const handleVerifyCode = () => {
+  // 4. 인증번호 확인 검증
+  const handleVerifyCode = async () => {
     if (!code) {
       setCodeErr("인증번호를 입력해주세요.");
       return;
     }
-    setIsVerified(true);
-    setCodeErr("");
+    try {
+      await verifyCode(email, code);
+      setIsVerified(true);
+      setCodeErr("");
+      setModalTitle("인증 완료");
+      setModalContent("이메일 인증이 성공적으로 완료되었습니다.");
+      setIsSuccess(false);
+      setModalOpen(true);
+    } catch (err) {
+      setCodeErr(err.message || "인증번호가 일치하지 않거나 만료되었습니다.");
+      setIsVerified(false);
+    }
   };
 
+  // 5. 최종 회원가입 요청 제출
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    setEmailErr("");
-    setCodeErr("");
-    setPwErr("");
-    setConfirmErr("");
-    setNameErr("");
-    setNicknameErr("");
-    setPhoneErr("");
 
     let isValid = true;
 
-    // 유효성 검사
-    if (!email) {
-      setEmailErr("이메일을 입력해주세요.");
+    if (!email || emailErr) {
+      setEmailErr("이메일을 확인해주세요.");
+      isValid = false;
+    }
+    if (!isEmailChecked) {
+      setEmailErr("이메일 중복확인을 완료해주세요.");
       isValid = false;
     }
     if (!isVerified) {
       setCodeErr("이메일 인증을 완료해주세요.");
       isValid = false;
     }
-    if (!pw) {
-      setPwErr("비밀번호를 입력해주세요.");
+    if (!pw || pwErr) {
+      setPwErr("비밀번호를 확인해주세요.");
       isValid = false;
     }
-    if (pw !== confirm) {
+    if (pw !== confirm || confirmErr) {
       setConfirmErr("비밀번호가 일치하지 않습니다.");
       isValid = false;
     }
@@ -83,22 +234,32 @@ function SignupPage() {
       setNameErr("이름을 입력해주세요.");
       isValid = false;
     }
-    if (!nickname) {
-      setNicknameErr("닉네임을 입력해주세요.");
+    if (!nickname || !isNicknameChecked) {
+      setNicknameErr("닉네임 중복확인을 완료해주세요.");
       isValid = false;
     }
-    if (!phone) {
-      setPhoneErr("전화번호를 입력해주세요.");
+    if (!phone || phoneErr) {
+      setPhoneErr("전화번호를 확인해주세요.");
       isValid = false;
     }
 
-    // 백엔드 연동
     if (isValid) {
       try {
-        await signup({ email, password: pw, name, nickname, phone });
+        await signup({
+          email,
+          password: pw,
+          passwordConfirm: confirm,
+          name,
+          nickname,
+          phone,
+        });
+
+        setModalTitle("회원가입 완료");
+        setModalContent("회원가입이 성공적으로 완료되었습니다!");
+        setIsSuccess(true);
         setModalOpen(true);
       } catch (error) {
-        alert("회원가입 처리 중 오류가 발생했습니다. 입력값을 확인하세요.");
+        alert(error.message || "회원가입 처리 중 오류가 발생했습니다.");
       }
     }
   };
@@ -120,6 +281,7 @@ function SignupPage() {
                 disabled={isVerified}
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  setIsEmailChecked(false);
                   if (e.target.value) setEmailErr("");
                 }}
               />
@@ -127,6 +289,7 @@ function SignupPage() {
                 type="button"
                 className="signup-inner-btn-gray"
                 disabled={isVerified}
+                onClick={handleEmailCheck}
               >
                 중복확인
               </button>
@@ -189,6 +352,7 @@ function SignupPage() {
               className={pwErr ? "input-error" : ""}
               placeholder="비밀번호를 입력해주세요"
               value={pw}
+              onBlur={(e) => validatePasswordOnBlur(e.target.value)}
               onChange={(e) => {
                 setPw(e.target.value);
                 if (e.target.value) setPwErr("");
@@ -205,6 +369,7 @@ function SignupPage() {
               className={confirmErr ? "input-error" : ""}
               placeholder="비밀번호를 한 번 더 입력해주세요"
               value={confirm}
+              onBlur={(e) => validateConfirmOnBlur(e.target.value)}
               onChange={(e) => {
                 setConfirm(e.target.value);
                 if (e.target.value) setConfirmErr("");
@@ -240,10 +405,15 @@ function SignupPage() {
                 value={nickname}
                 onChange={(e) => {
                   setNickname(e.target.value);
+                  setIsNicknameChecked(false);
                   if (e.target.value) setNicknameErr("");
                 }}
               />
-              <button type="button" className="signup-inner-btn-gray">
+              <button
+                type="button"
+                className="signup-inner-btn-gray"
+                onClick={handleNicknameCheck}
+              >
                 중복확인
               </button>
             </div>
@@ -258,6 +428,7 @@ function SignupPage() {
               className={phoneErr ? "input-error" : ""}
               placeholder="010-0000-0000"
               value={phone}
+              onBlur={(e) => validatePhoneOnBlur(e.target.value)}
               onChange={(e) => {
                 setPhone(e.target.value);
                 if (e.target.value) setPhoneErr("");
@@ -282,15 +453,16 @@ function SignupPage() {
         </form>
       </div>
 
-      {/* 모달창 */}
       <OneButtonModal
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false);
-          navigate("/login");
+          if (isSuccess) {
+            navigate("/login");
+          }
         }}
-        modalTitle="회원가입 완료"
-        modalContent="회원가입이 성공적으로 완료되었습니다!"
+        modalTitle={modalTitle}
+        modalContent={modalContent}
       />
     </div>
   );

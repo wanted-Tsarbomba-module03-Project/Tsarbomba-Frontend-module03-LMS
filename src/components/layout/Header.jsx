@@ -21,8 +21,7 @@ function Header({ isSimple }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
-  // 임시 - 닉네임 가져오기
-  useEffect(() => {
+  const syncHeaderStatus = () => {
     const savedNickname = localStorage.getItem("userNickname");
     if (savedNickname) {
       setIsLoggedIn(true);
@@ -31,6 +30,15 @@ function Header({ isSimple }) {
       setIsLoggedIn(false);
       setNickname("닉네임");
     }
+  };
+
+  useEffect(() => {
+    syncHeaderStatus();
+
+    window.addEventListener("loginSuccess", syncHeaderStatus);
+    return () => {
+      window.removeEventListener("loginSuccess", syncHeaderStatus);
+    };
   }, [location]);
 
   // 드롭다운, 모달
@@ -46,7 +54,13 @@ function Header({ isSimple }) {
   const handleLogoutConfirm = async () => {
     setIsLogoutModalOpen(false);
 
-    // 쿠키 삭제
+    // 로그아웃
+    try {
+      await logoutService();
+    } catch (e) {
+      console.error(e);
+    }
+
     localStorage.clear();
     sessionStorage.clear();
 
@@ -72,7 +86,6 @@ function Header({ isSimple }) {
     }, 500);
   };
 
-  /* 로고만 */
   if (isSimple) {
     return (
       <header className="header">
@@ -90,7 +103,6 @@ function Header({ isSimple }) {
     );
   }
 
-  /* 헤더 */
   return (
     <header className="header">
       <div className="header-content">
@@ -108,7 +120,6 @@ function Header({ isSimple }) {
           <SearchBar />
         </div>
 
-        {/* 글씨 */}
         <div className="header-right">
           <span
             className="header-text-btn"
@@ -148,7 +159,6 @@ function Header({ isSimple }) {
                 />
                 {nickname}
               </button>
-              {/* 드롭다운 */}
               {isDropdownOpen && (
                 <div className="header-dropdown-box">
                   <div

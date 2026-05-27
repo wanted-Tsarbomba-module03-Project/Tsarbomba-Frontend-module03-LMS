@@ -22,8 +22,38 @@ function LoginPage() {
   const [passwordErr, setPasswordErr] = useState("");
   const [loginCommonErr, setLoginCommonErr] = useState("");
 
+  // 이메일 실시간 체크
+  const validateEmailOnBlur = (e) => {
+    if (
+      e.relatedTarget &&
+      e.relatedTarget.className.includes("login-btn-blue")
+    ) {
+      return;
+    }
+    if (!email) {
+      setEmailErr("이메일을 입력해주세요.");
+    } else {
+      setEmailErr("");
+    }
+  };
+
+  // 비밀번호 실시간 체크
+  const validatePasswordOnBlur = (e) => {
+    if (
+      e.relatedTarget &&
+      e.relatedTarget.className.includes("login-btn-blue")
+    ) {
+      return;
+    }
+    if (!password) {
+      setPasswordErr("비밀번호를 입력해주세요.");
+    } else {
+      setPasswordErr("");
+    }
+  };
+
   const handleGoogleLogin = () => {
-    window.location.href = `${BASE_URL}/oauth2/authorization/google`;
+    window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`;
   };
 
   const handleLoginSubmit = async (e) => {
@@ -35,7 +65,6 @@ function LoginPage() {
 
     let isValid = true;
 
-    // 유효성 검사
     if (!email) {
       setEmailErr("이메일을 입력해주세요.");
       isValid = false;
@@ -45,19 +74,31 @@ function LoginPage() {
       isValid = false;
     }
 
+    // 유저 닉네임
     if (isValid) {
       try {
-        const data = await login(email, password);
-        const realNickname =
-          data?.data?.nickname || data?.nickname || email.split("@")[0];
+        const responseData = await login(email, password);
+
+        const realNickname = responseData?.data?.nickname;
+
+        if (!realNickname) {
+          throw new Error(
+            "유저 정보를 정상적으로 불러올 수 없습니다. 다시 시도해주세요.",
+          );
+        }
+
         localStorage.setItem("userNickname", realNickname);
+
+        window.dispatchEvent(new Event("loginSuccess"));
 
         setModalTitle("로그인 성공");
         setModalContent("환영합니다! 로그인이 완료되었습니다.");
         setIsSuccess(true);
         setModalOpen(true);
       } catch (error) {
-        setLoginCommonErr("아이디 또는 비밀번호가 일치하지 않습니다.");
+        setLoginCommonErr(
+          error.message || "아이디 또는 비밀번호가 일치하지 않습니다.",
+        );
       }
     }
   };
@@ -67,14 +108,15 @@ function LoginPage() {
       <div className="login-card">
         <h1 className="login-title">로그인</h1>
         <form onSubmit={handleLoginSubmit}>
-          {/* 이메일 입력 */}
           <div className="login-input-box">
+            {/* 이메일 */}
             <label>이메일</label>
             <input
               type="text"
               className={emailErr || loginCommonErr ? "input-error" : ""}
               placeholder="your@email.com"
               value={email}
+              onBlur={validateEmailOnBlur}
               onChange={(e) => {
                 setEmail(e.target.value);
                 if (e.target.value) {
@@ -85,8 +127,7 @@ function LoginPage() {
             />
             {emailErr && <p className="error-text">{emailErr}</p>}
           </div>
-
-          {/* 비밀번호 입력 */}
+          {/* 비밀번호 */}
           <div className="login-input-box">
             <label>비밀번호</label>
             <input
@@ -94,6 +135,7 @@ function LoginPage() {
               className={passwordErr || loginCommonErr ? "input-error" : ""}
               placeholder="비밀번호를 입력해주세요"
               value={password}
+              onBlur={validatePasswordOnBlur}
               onChange={(e) => {
                 setPassword(e.target.value);
                 if (e.target.value) {
@@ -103,17 +145,17 @@ function LoginPage() {
               }}
             />
             {passwordErr && <p className="error-text">{passwordErr}</p>}
-
             {loginCommonErr && <p className="error-text">{loginCommonErr}</p>}
           </div>
 
+          {/* 아이디 찾기, 비밀번호 재설정 */}
           <div className="login-find-box">
             <span onClick={() => navigate("/find-id")}>아이디 찾기</span>
             <span className="bar">|</span>
             <span onClick={() => navigate("/reset-pw")}>비밀번호 재설정</span>
           </div>
 
-          {/* 버튼 박스 */}
+          {/* 로그인, 회원가입 */}
           <div className="login-btn-box">
             <button type="submit" className="login-btn-blue">
               로그인
@@ -127,7 +169,7 @@ function LoginPage() {
             </button>
           </div>
 
-          {/* 구글 로그인 버튼 */}
+          {/* 구글 로그인 */}
           <button
             type="button"
             className="login-btn-google"
@@ -144,7 +186,7 @@ function LoginPage() {
         onClose={() => {
           setModalOpen(false);
           if (isSuccess) {
-            window.location.href = "/";
+            navigate("/");
           }
         }}
         modalTitle={modalTitle}
