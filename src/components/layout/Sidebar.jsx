@@ -1,111 +1,117 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
 import "./Sidebar.css";
 
 function Sidebar({ isOpen, userNickname = "게스트" }) {
-  const currentPath = window.location.pathname;
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   /* 관리자 페이지 사이드바 */
   const AdminMenu = () => (
     <div className="sidebar-content">
       <h3 className="sidebar-title">관리페이지</h3>
-
       <ul className="sidebar-list">
-
         <li>
           <NavLink
             to="/admin/users"
-            className={ ({ isActive }) =>
+            className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
             회원 관리
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to="/admin/lectures"
-            className={ ({ isActive }) =>
+            className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
             강의 관리
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to="/admin/problems"
-            className={ ({ isActive }) =>
+            className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
             문제 관리
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to="/admin/badges"
-            className={ ({ isActive }) =>
+            className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
             뱃지 관리
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to="/admin/rules"
-            className={ ({ isActive }) =>
+            className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
             규칙 관리
           </NavLink>
         </li>
-
         <li>
           <NavLink
             to="/admin/alrams"
-            className={ ({ isActive }) =>
+            className={({ isActive }) =>
               `sidebar-item ${isActive ? "active" : ""}`
             }
           >
             알람 관리
           </NavLink>
         </li>
-
       </ul>
     </div>
   );
 
-  /* 마이페이지 사이드바 */
+  /* 마이페이지 사이드바 컴포넌트 */
   const MypageMenu = () => (
     <div className="sidebar-content">
       <div className="profile-section">
         <div className="profile-img-box">
-          <img src={ BluebombLogo } alt="프로필" className="profile-img" />
+          <img src={BluebombLogo} alt="프로필" className="profile-img" />
         </div>
-        <span className="profile-nickname">{ userNickname }</span>
+        <span className="profile-nickname">{userNickname}</span>
       </div>
       <ul className="sidebar-list">
-        <li
-          className={ `sidebar-item ${currentPath.includes("/profile") ? "active" : ""}` }
-        >
-          내 소개
+        <li>
+          <NavLink
+            to="/user/introduce"
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            내 소개
+          </NavLink>
         </li>
-        <li className="sidebar-item">프로필 정보</li>
-        <li className="sidebar-item">로그아웃</li>
+        <li>
+          <NavLink
+            to="/user/profile"
+            className={({ isActive }) =>
+              `sidebar-item ${isActive ? "active" : ""}`
+            }
+          >
+            프로필 정보
+          </NavLink>
+        </li>
       </ul>
     </div>
   );
 
   /* 문제풀이 페이지 사이드바 */
-  const problemCategoryMenu = () => (
+  const ProblemCategoryMenu = () => (
     <div className="sidebar-content">
       <h3 className="sidebar-title">카테고리</h3>
       <ul className="sidebar-list">
@@ -120,21 +126,27 @@ function Sidebar({ isOpen, userNickname = "게스트" }) {
     </div>
   );
 
-  /* 사이드바 경로 지정 */
-  const isAdmin = currentPath.includes("/admin");
-  const isCategory = currentPath.includes("/problem");
+  const isAdmin = currentPath.startsWith("/admin");
+
+  const isCategory =
+    currentPath.startsWith("/problems") ||
+    currentPath.includes("/problem/") ||
+    currentPath === "/user/problems";
+
   const isMypage =
-    currentPath.includes("/profile") || currentPath.includes("/my-classroom");
+    (currentPath.startsWith("/user/introduce") ||
+      currentPath.startsWith("/user/profile")) &&
+    !isCategory;
 
   if (!isAdmin && !isCategory && !isMypage) {
     return null;
   }
 
   return (
-    <aside className={ `sidebar ${isOpen ? "open" : ""}` }>
-      { isAdmin && AdminMenu() }
-      { isMypage && MypageMenu() }
-      { isCategory && problemCategoryMenu() }
+    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+      {isAdmin && AdminMenu()}
+      {isMypage && MypageMenu()}
+      {isCategory && ProblemCategoryMenu()}
     </aside>
   );
 }
