@@ -154,7 +154,7 @@ function Header({ isSimple }) {
                   <div
                     className="header-dropdown-item"
                     onClick={() => {
-                      navigate("/user/profile");
+                      navigate("/user/introduce");
                       setIsDropdownOpen(false);
                     }}
                   >
