@@ -26,6 +26,7 @@ import MypageProfile from "../pages/user/mypage/mypageprofile";
 import ProfileEditPage from "../pages/user/mypage/profileeditpage";
 import AuthVerifyPage from "../pages/user/mypage/authverifypage";
 import LectureSolvePage from "../pages/user/lecture/lectursolvepage";
+import IntroducePage from "../pages/user/mypage/IntroducePage";
 
 // [관리자]
 import UserTotalPage from "../pages/admin/user/usertotalpage";
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
       { path: "lecture/:id/solve", element: <LectureSolvePage /> },
       { path: "problems", element: <ProblemTotalPage /> },
       { path: "problem/:id", element: <ProblemDetailPage /> },
+      { path: "introduce", element: <IntroducePage /> },
       { path: "profile", element: <MypageProfile /> },
       { path: "profile/edit", element: <ProfileEditPage /> },
     ],
@@ -75,10 +77,10 @@ export const router = createBrowserRouter([
       { path: "user/:id", element: <UserDetailPage /> },
       { path: "lectures", element: <LectureTotalPage /> },
       { path: "lecture/:id", element: <LectureDetailPage /> },
-      { path: "lecture/regist", element: <LectureRegistPage /> },
+      { path: "lecture/new", element: <LectureRegistPage /> },
       { path: "problems", element: <ProblemTotalPage /> },
       { path: "problem/:id", element: <ProblemDetailPage /> },
-      { path: "problem/regist", element: <ProblemRegistPage /> },
+      { path: "problem/new", element: <ProblemRegistPage /> },
       { path: "profile", element: <MypageProfile /> },
       { path: "profile/edit", element: <ProfileEditPage /> },
       { path: "badges", element: <BadgeTotalPage /> },
