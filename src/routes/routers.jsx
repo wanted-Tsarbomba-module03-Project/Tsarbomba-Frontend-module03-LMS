@@ -36,6 +36,7 @@ import ProblemRegistPage from "../pages/admin/problem/problemregistpage";
 import BadgeTotalPage from "../pages/admin/badge/BadgeTotalPage";
 import RuleTotalPage from "../pages/admin/rule/RuleTotalPage";
 import AlramTotalPage from "../pages/admin/alram/AlramTotalPage";
+import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
 
 export const router = createBrowserRouter([
   {
@@ -78,11 +79,10 @@ export const router = createBrowserRouter([
       { path: "lectures", element: <LectureTotalPage /> },
       { path: "lecture/:id", element: <LectureDetailPage /> },
       { path: "lecture/new", element: <LectureRegistPage /> },
+      { path: "lecture/:id/progress", element: <LectureProgressPage /> },
       { path: "problems", element: <ProblemTotalPage /> },
       { path: "problem/:id", element: <ProblemDetailPage /> },
       { path: "problem/new", element: <ProblemRegistPage /> },
-      { path: "profile", element: <MypageProfile /> },
-      { path: "profile/edit", element: <ProfileEditPage /> },
       { path: "badges", element: <BadgeTotalPage /> },
       { path: "rules", element: <RuleTotalPage /> },
       { path: "alrams", element: <AlramTotalPage /> },

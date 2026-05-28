@@ -22,7 +22,7 @@ function LoginPage() {
   const [passwordErr, setPasswordErr] = useState("");
   const [loginCommonErr, setLoginCommonErr] = useState("");
 
-  // 이메일 실시간 체크
+  // 이메일 체크
   const validateEmailOnBlur = (e) => {
     if (
       e.relatedTarget &&
@@ -37,7 +37,7 @@ function LoginPage() {
     }
   };
 
-  // 비밀번호 실시간 체크
+  // 비밀번호 체크
   const validatePasswordOnBlur = (e) => {
     if (
       e.relatedTarget &&
@@ -52,10 +52,12 @@ function LoginPage() {
     }
   };
 
+  // 구글 로그인
   const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`;
   };
 
+  // 일반 로그인
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,25 +76,44 @@ function LoginPage() {
       isValid = false;
     }
 
-    // 유저 닉네임
     if (isValid) {
       try {
         const responseData = await login(email, password);
 
-        const realNickname = responseData?.data?.nickname;
+        // 로그인 시 닉네임, role
+        const Nickname = responseData?.data?.nickname;
+        let Role = responseData?.data?.role;
 
-        if (!realNickname) {
+        // 임시 role - 닉네임에서 가져옴
+        if (!Role && Nickname) {
+          const lowerName = Nickname.toLowerCase();
+
+          if (lowerName.includes("admin")) {
+            Role = "ADMIN";
+          } else if (
+            lowerName.includes("operator") ||
+            lowerName.includes("op")
+          ) {
+            Role = "OPERATOR";
+          } else {
+            Role = "STUDENT";
+          }
+        }
+
+        if (!Nickname || !Role) {
           throw new Error(
-            "유저 정보를 정상적으로 불러올 수 없습니다. 다시 시도해주세요.",
+            "유저 정보 또는 권한 설정을 정상적으로 불러올 수 없습니다. 다시 시도해주세요.",
           );
         }
 
-        localStorage.setItem("userNickname", realNickname);
+        // 유저 정보 저장
+        localStorage.setItem("userNickname", Nickname);
+        localStorage.setItem("userRole", Role);
 
         window.dispatchEvent(new Event("loginSuccess"));
 
         setModalTitle("로그인 성공");
-        setModalContent("환영합니다! 로그인이 완료되었습니다.");
+        setModalContent(`환영합니다! 로그인이 완료되었습니다.`);
         setIsSuccess(true);
         setModalOpen(true);
       } catch (error) {
@@ -108,8 +129,8 @@ function LoginPage() {
       <div className="login-card">
         <h1 className="login-title">로그인</h1>
         <form onSubmit={handleLoginSubmit}>
+          {/* 이메일 */}
           <div className="login-input-box">
-            {/* 이메일 */}
             <label>이메일</label>
             <input
               type="text"
@@ -127,6 +148,7 @@ function LoginPage() {
             />
             {emailErr && <p className="error-text">{emailErr}</p>}
           </div>
+
           {/* 비밀번호 */}
           <div className="login-input-box">
             <label>비밀번호</label>
@@ -169,7 +191,7 @@ function LoginPage() {
             </button>
           </div>
 
-          {/* 구글 로그인 */}
+          {/* 구글 소셜 로그인 */}
           <button
             type="button"
             className="login-btn-google"
@@ -180,13 +202,21 @@ function LoginPage() {
         </form>
       </div>
 
-      {/* 모달 */}
+      {/* 모달 및 임시 role */}
       <OneButtonModal
         isOpen={modalOpen}
         onClose={() => {
           setModalOpen(false);
           if (isSuccess) {
-            navigate("/");
+            const savedRole = localStorage.getItem("userRole");
+
+            if (savedRole === "ADMIN") {
+              navigate("/admin/users");
+            } else if (savedRole === "OPERATOR") {
+              navigate("/admin/lectures");
+            } else {
+              navigate("/");
+            }
           }
         }}
         modalTitle={modalTitle}
