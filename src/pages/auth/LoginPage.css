@@ -1,0 +1,119 @@
+.login-card {
+  width: 400px;
+  padding: 25px 40px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  text-align: center;
+  box-sizing: border-box;
+  margin-top: -50px;
+}
+.login-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 30px;
+}
+.login-input-box {
+  text-align: left;
+  margin-bottom: 15px;
+}
+.login-input-box label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+.login-input-box input {
+  width: 100%;
+  height: 42px;
+  padding: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+}
+.login-input-box input::placeholder {
+  color: #c8c8c8;
+}
+
+.login-input-box input.input-error {
+  border: 1px solid #fb2c36;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #fb2c36;
+  margin-top: 6px;
+  margin-bottom: 0;
+  padding-left: 4px;
+  text-align: left;
+}
+
+.login-find-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  margin-left: 23px;
+}
+.login-find-box span {
+  color: #1a237e;
+  cursor: pointer;
+}
+.login-find-box .bar {
+  color: #6b7280;
+  cursor: default;
+}
+.login-btn-box {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.login-btn-blue,
+.login-btn-gray {
+  width: 100%;
+  height: 42px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+.login-btn-blue {
+  background-color: #1a237e;
+  color: #ffffff;
+}
+.login-btn-blue:hover {
+  background-color: #111751;
+}
+.login-btn-gray {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border: 1px solid #e8e8e8;
+}
+.login-btn-gray:hover {
+  background-color: #e8e8e8;
+}
+.login-btn-google {
+  width: 100%;
+  height: 42px;
+  font-size: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #ffffff;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-btn-google:hover {
+  background-color: #f3f4f6;
+}

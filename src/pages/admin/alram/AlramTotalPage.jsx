@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import List from "../../../../src/components/common/List";
+import { getOperationAlerts } from "../../../services/adminService";
+import "./AlramTotalPage.css";
 
 function AlramTotalPage() {
     const navigate = useNavigate();
@@ -9,14 +11,12 @@ function AlramTotalPage() {
     const [status, setStatus] = useState("");
     const [alerts, setAlerts] = useState([]);
 
-    // 상태 한글 변환
     const statusMap = {
         OPEN: "미처리",
         RESOLVED: "처리 완료",
-        IGNORED: "무시",
+        IGNORED: "무시됨",
     };
 
-    // 리스트 컬럼
     const columns = [
         {
             key: "index",
@@ -33,11 +33,7 @@ function AlramTotalPage() {
         },
     ];
 
-    // 버튼 클릭 처리
     const handleTypeChange = (newType) => {
-
-        console.log(`${newType} 페이지를 호출합니다.`);
-
         setType(newType);
     };
 
@@ -50,19 +46,17 @@ function AlramTotalPage() {
     };
 
     useEffect(() => {
-
-        fetch(
-            `${BASE_URL}/api/v1/admin/operation-alerts?targetType=${type}&page=0&size=20`
-        )
-            .then((res) => res.json())
-            .then((result) => {
+        const fetchAlerts = async () => {
+            try {
+                const result = await getOperationAlerts(type, status);
                 setAlerts(result.data.content);
-            })
-            .catch((err) => {
+            } catch (err) {
                 console.error("알람 목록 조회 실패:", err);
-            });
+            }
+        };
 
-    }, [type]);
+        fetchAlerts();
+    }, [type, status]);
 
     return (
         <div className="alarm-container">

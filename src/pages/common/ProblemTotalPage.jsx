@@ -1,9 +1,8 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import List from "../../components/common/List";
 
 function ProblemTotalPage() {
-<<<<<<< Updated upstream
-  return <div>ProblemTotalPage</div>;
-=======
   const navigate = useNavigate();
 
   const BASE_URL = import.meta.env.VITE_API_URL;
@@ -118,7 +117,6 @@ function ProblemTotalPage() {
       />
     </div>
   );
->>>>>>> Stashed changes
 }
 
 export default ProblemTotalPage;

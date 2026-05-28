@@ -25,11 +25,14 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .header-logo-img {
   cursor: pointer;
   margin-left: 10px;
+  margin-right: 5px;
   height: 40px;
 }
 
@@ -95,11 +98,55 @@
   object-fit: contain;
 }
 
+.header-user-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.header-user-btn {
+  border-radius: 8px;
+  padding: 6px 16px;
+}
+
+.header-user-btn.active {
+  background-color: #1a237e;
+  color: #ffffff;
+}
+
+.header-user-btn.active .header-bomb-img {
+  content: url("../../assets/img/whitebomb-Icon.svg");
+}
+
+.header-dropdown-box {
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  width: 150px;
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 8px 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-dropdown-item {
+  padding: 12px 20px;
+  font-size: 16px;
+  color: #1f2937;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.header-dropdown-item:hover {
+  background-color: #f3f4f6;
+  color: #1a237e;
+  font-weight: bold;
+}
+
 @media (max-width: 1024px) {
-  .header-logo-img {
-    height: 24px;
-    margin-left: 0;
-  }
   .header-middle > * {
     max-width: 240px;
   }
@@ -107,11 +154,15 @@
     font-size: 13px;
     margin: 0 6px;
   }
-  .header-btn {
+  .header-login-btn {
     padding: 5px 8px;
     font-size: 13px;
     margin: 0 6px;
     border-radius: 6px;
+  }
+  .header-user-btn {
+    border-radius: 20px;
+    padding: 5px 12px;
   }
   .header-bomb-img {
     width: 14px;
@@ -122,5 +173,13 @@
   }
   .header-content {
     padding: 0 15px;
+  }
+  .header-dropdown-box {
+    top: 35px;
+    width: 120px;
+  }
+  .header-dropdown-item {
+    padding: 10px 14px;
+    font-size: 14px;
   }
 }

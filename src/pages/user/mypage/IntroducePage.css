@@ -1,0 +1,108 @@
+.introduce-intro-card {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 32px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.introduce-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.introduce-card-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.introduce-edit-btn {
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.introduce-edit-btn:hover {
+  background-color: #e8e8e8;
+}
+
+.introduce-edit-icon-img {
+  width: 20px;
+  height: 20px;
+}
+
+.introduce-edit-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.introduce-save-btn {
+  background-color: #1a237e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.introduce-save-btn:hover {
+  background-color: #111751;
+}
+
+.introduce-text-display {
+  font-size: 16px;
+  color: #1f2937;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.introduce-empty-text {
+  color: #6b7280;
+}
+
+.introduce-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.introduce-edit-input,
+.introduce-edit-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #1f2937;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  background-color: #ffffff;
+}
+
+.introduce-edit-input::placeholder,
+.introduce-edit-textarea::placeholder {
+  color: #c8c8c8;
+}
+
+.introduce-edit-input:focus,
+.introduce-edit-textarea:focus {
+  border-color: #1a237e;
+}
+
+.introduce-edit-textarea {
+  resize: none;
+}
