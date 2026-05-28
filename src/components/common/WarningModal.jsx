@@ -38,11 +38,11 @@ const WarningButtonModal = ({
 
                 {/* 버튼 */ }
                 <div className="modal-button-wrap">
-                    <button className="waringBtnY" onClick={ onConfirm }>
+                    <button className="warningBtnY" onClick={ onConfirm }>
                         확인
                     </button>
 
-                    <button className="waringBtnN" onClick={ onClose }>
+                    <button className="warningBtnN" onClick={ onClose }>
                         취소
                     </button>
                 </div>

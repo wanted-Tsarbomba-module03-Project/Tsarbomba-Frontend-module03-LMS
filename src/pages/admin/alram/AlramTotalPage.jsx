@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import List from "../../../../src/components/common/List";
 
 function AlramTotalPage() {
+    const navigate = useNavigate();
 
-    const BASE_URL = import.meta.env.VITE_API_URL;
-
-    // 현재 선택된 targetType
     const [type, setType] = useState("PROBLEM");
-
-    // 알람 목록
+    const [status, setStatus] = useState("");
     const [alerts, setAlerts] = useState([]);
 
     // 상태 한글 변환
@@ -43,7 +41,14 @@ function AlramTotalPage() {
         setType(newType);
     };
 
-    // type 변경 시 API 재호출
+    const handleStatusChange = (e) => {
+        setStatus(e.target.value);
+    };
+
+    const handleRowClick = (item) => {
+        navigate(`/admin/alram/${item.operationAlertId}`);
+    };
+
     useEffect(() => {
 
         fetch(
@@ -60,31 +65,50 @@ function AlramTotalPage() {
     }, [type]);
 
     return (
-        <div>
+        <div className="alarm-container">
+            <div className="alarm-header">
+                <h2>알람 관리</h2>
 
-            <h2>알람 관리</h2>
+                <select
+                    className="status-select"
+                    value={ status }
+                    onChange={ handleStatusChange }
+                >
+                    <option value="">전체</option>
+                    <option value="OPEN">미처리</option>
+                    <option value="RESOLVED">처리 완료</option>
+                    <option value="IGNORED">무시됨</option>
+                </select>
+            </div>
 
-            <div style={ { marginBottom: "20px" } }>
-
-                <button onClick={ () => handleTypeChange("PROBLEM") }>
-                    PROBLEM
+            <div className="type-btn-group">
+                <button
+                    className={ type === "PROBLEM" ? "btn active" : "btn" }
+                    onClick={ () => handleTypeChange("PROBLEM") }
+                >
+                    문제
                 </button>
 
-                <button onClick={ () => handleTypeChange("USER") }>
-                    USER
+                <button
+                    className={ type === "USER" ? "btn active" : "btn" }
+                    onClick={ () => handleTypeChange("USER") }
+                >
+                    회원
                 </button>
 
-                <button onClick={ () => handleTypeChange("COURSE") }>
-                    COURSE
+                <button
+                    className={ type === "COURSE" ? "btn active" : "btn" }
+                    onClick={ () => handleTypeChange("COURSE") }
+                >
+                    강의
                 </button>
-
             </div>
 
             <List
                 data={ alerts }
                 columns={ columns }
+                onRowClick={ handleRowClick }
             />
-
         </div>
     );
 }
