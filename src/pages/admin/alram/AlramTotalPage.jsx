@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import List from "../../../../src/components/common/List";
 import { getOperationAlerts } from "../../../services/adminService";
 import "./AlramTotalPage.css";
 
 function AlramTotalPage() {
-    // targetType
+    const navigate = useNavigate();
+
     const [type, setType] = useState("PROBLEM");
-
-    // status filter
     const [status, setStatus] = useState("");
-
-    // alerts
     const [alerts, setAlerts] = useState([]);
 
     const statusMap = {
@@ -43,6 +41,10 @@ function AlramTotalPage() {
         setStatus(e.target.value);
     };
 
+    const handleRowClick = (item) => {
+        navigate(`/admin/alram/${item.operationAlertId}`);
+    };
+
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
@@ -58,11 +60,9 @@ function AlramTotalPage() {
 
     return (
         <div className="alarm-container">
-            {/* 헤더 */ }
             <div className="alarm-header">
                 <h2>알람 관리</h2>
 
-                {/* 상태 필터 */ }
                 <select
                     className="status-select"
                     value={ status }
@@ -75,7 +75,6 @@ function AlramTotalPage() {
                 </select>
             </div>
 
-            {/* 타입 버튼 */ }
             <div className="type-btn-group">
                 <button
                     className={ type === "PROBLEM" ? "btn active" : "btn" }
@@ -99,7 +98,11 @@ function AlramTotalPage() {
                 </button>
             </div>
 
-            <List data={ alerts } columns={ columns } />
+            <List
+                data={ alerts }
+                columns={ columns }
+                onRowClick={ handleRowClick }
+            />
         </div>
     );
 }

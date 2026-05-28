@@ -69,7 +69,7 @@ function useProblemDetail() {
     try {
       let data;
 
-      // ✅ mock 모드
+      // mock 모드
       if (USE_MOCK) {
         data = DUMMY_PROBLEM_SET;
       } else {

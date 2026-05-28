@@ -65,7 +65,7 @@ function ProblemTotalPage() {
   // 문제 목록 조회
   useEffect(() => {
     fetch(
-      `${BASE_URL}/api/v1/problem-sets?categoryId=${categoryId}`,
+      `${BASE_URL}/api/v1/problem-sets`,
       {
         method: "GET",
         headers: {

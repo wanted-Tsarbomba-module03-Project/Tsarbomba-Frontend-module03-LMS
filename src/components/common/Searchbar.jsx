@@ -10,7 +10,8 @@ export default function SearchBar() {
 
         if (!trimmed) return;
 
-        console.log("검색어:", trimmed);
+        // console.log("검색어:", trimmed);
+        onSearch(trimmed);
 
         // TODO: 검색 결과 반영 로직 작성
     };
