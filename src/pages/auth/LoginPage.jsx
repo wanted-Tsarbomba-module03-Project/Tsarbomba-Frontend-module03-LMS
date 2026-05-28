@@ -211,9 +211,9 @@ function LoginPage() {
             const savedRole = localStorage.getItem("userRole");
 
             if (savedRole === "ADMIN") {
-              navigate("/admin/lectures");
-            } else if (savedRole === "OPERATOR") {
               navigate("/admin/users");
+            } else if (savedRole === "OPERATOR") {
+              navigate("/admin/lectures");
             } else {
               navigate("/");
             }

@@ -61,6 +61,32 @@ function Sidebar({ isOpen, userNickname: propsNickname }) {
             <>
               <li>
                 <NavLink
+                  to="/admin/lectures"
+                  className={({ isActive }) =>
+                    `sidebar-item ${isActive ? "active" : ""}`
+                  }
+                >
+                  강의 관리
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/admin/problems"
+                  className={({ isActive }) =>
+                    `sidebar-item ${isActive ? "active" : ""}`
+                  }
+                >
+                  문제 관리
+                </NavLink>
+              </li>
+            </>
+          )}
+
+          {/* Admin */}
+          {isAdminUser && (
+            <>
+              <li>
+                <NavLink
                   to="/admin/users"
                   className={({ isActive }) =>
                     `sidebar-item ${isActive ? "active" : ""}`
@@ -97,32 +123,6 @@ function Sidebar({ isOpen, userNickname: propsNickname }) {
                   }
                 >
                   알람 관리
-                </NavLink>
-              </li>
-            </>
-          )}
-
-          {/* Admin */}
-          {isAdminUser && (
-            <>
-              <li>
-                <NavLink
-                  to="/admin/lectures"
-                  className={({ isActive }) =>
-                    `sidebar-item ${isActive ? "active" : ""}`
-                  }
-                >
-                  강의 관리
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/admin/problems"
-                  className={({ isActive }) =>
-                    `sidebar-item ${isActive ? "active" : ""}`
-                  }
-                >
-                  문제 관리
                 </NavLink>
               </li>
             </>
