@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import List from "../../components/common/List";
 
 function ProblemTotalPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -64,23 +65,23 @@ function ProblemTotalPage() {
 
   // 문제 목록 조회
   useEffect(() => {
-    fetch(
-      `${BASE_URL}/api/v1/problem-sets?categoryId=${categoryId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    )
+    fetch(`${BASE_URL}/api/v1/problem-sets`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error(`서버 오류: ${res.status}`);
         }
+
         return res.json();
       })
       .then((result) => {
-        console.log("API 응답:", result);
+        // console.log("API 응답:", result);
+
         setProblem(result.data || []);
       })
       .catch((err) => {
@@ -88,7 +89,7 @@ function ProblemTotalPage() {
       });
   }, []);
 
-  // 클릭 → 상세 이동
+  // 셀 클릭 → 상세 이동
   const handleRowClick = (item) => {
     const id = item.problemSetId;
 
@@ -97,7 +98,18 @@ function ProblemTotalPage() {
       return;
     }
 
-    navigate(`/admin/problem/${id}`);
+    let detailPath = "";
+
+    if (location.pathname.startsWith("/admin")) {
+      detailPath = `/admin/problem/${id}`;
+    } else if (location.pathname.startsWith("/user")) {
+      detailPath = `/user/problem/${id}`;
+    } else {
+      console.error("지원하지 않는 경로:", location.pathname);
+      return;
+    }
+
+    navigate(detailPath);
   };
 
   return (

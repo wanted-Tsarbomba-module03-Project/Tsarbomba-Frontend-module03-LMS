@@ -77,6 +77,11 @@
   font-size: 18px;
 }
 
+.chat-new-button {
+  cursor: pointer;
+  user-select: none;
+}
+
 @media (max-width: 1024px) {
   .sidebar {
     position: fixed;

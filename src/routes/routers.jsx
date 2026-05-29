@@ -27,6 +27,7 @@ import ProfileEditPage from "../pages/user/mypage/profileeditpage";
 import AuthVerifyPage from "../pages/user/mypage/authverifypage";
 import LectureSolvePage from "../pages/user/lecture/lectursolvepage";
 import IntroducePage from "../pages/user/mypage/IntroducePage";
+import ChatbotPage from "../pages/user/chatbot/GeneralChatPage";
 
 // [관리자]
 import UserTotalPage from "../pages/admin/user/usertotalpage";
@@ -34,9 +35,11 @@ import UserDetailPage from "../pages/admin/user/userdetailpage";
 import LectureRegistPage from "../pages/admin/lecture/lectureregistpage";
 import ProblemRegistPage from "../pages/admin/problem/problemregistpage";
 import BadgeTotalPage from "../pages/admin/badge/BadgeTotalPage";
-import RuleTotalPage from "../pages/admin/rule/RuleTotalPage";
+import RulePage from "../pages/admin/rule/RulePage";
 import AlramTotalPage from "../pages/admin/alram/AlramTotalPage";
-import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
+import AlramDetailPage from "../pages/admin/alram/AlramDetailPage";
+import GeneralChatPage from "../pages/user/chatbot/GeneralChatPage";
+// import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
 
 export const router = createBrowserRouter([
   {
@@ -68,6 +71,8 @@ export const router = createBrowserRouter([
       { path: "introduce", element: <IntroducePage /> },
       { path: "profile", element: <MypageProfile /> },
       { path: "profile/edit", element: <ProfileEditPage /> },
+      { path: "chat", element: <GeneralChatPage /> },
+      { path: "chat/:roomId", element: <GeneralChatPage /> },
     ],
   },
   {
@@ -79,13 +84,14 @@ export const router = createBrowserRouter([
       { path: "lectures", element: <LectureTotalPage /> },
       { path: "lecture/:id", element: <LectureDetailPage /> },
       { path: "lecture/new", element: <LectureRegistPage /> },
-      { path: "lecture/:id/progress", element: <LectureProgressPage /> },
+      // { path: "lecture/:id/progress", element: <LectureProgressPage /> },
       { path: "problems", element: <ProblemTotalPage /> },
       { path: "problem/:id", element: <ProblemDetailPage /> },
       { path: "problem/new", element: <ProblemRegistPage /> },
       { path: "badges", element: <BadgeTotalPage /> },
-      { path: "rules", element: <RuleTotalPage /> },
+      { path: "rules", element: <RulePage /> },
       { path: "alrams", element: <AlramTotalPage /> },
+      { path: "alram/:id", element: <AlramDetailPage /> },
     ],
   },
   {

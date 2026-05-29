@@ -31,8 +31,9 @@ function ProblemRegistPage() {
     (state) => state.problem
   );
 
-  // 파일
-  const [files, setFiles] = React.useState([null]);
+  const [file, setFile] = React.useState(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const isSubmittingRef = React.useRef(false);
 
   // 모달
   const [openConfirmModal, setOpenConfirmModal] =
@@ -44,7 +45,6 @@ function ProblemRegistPage() {
   const [openCancelModal, setOpenCancelModal] =
     React.useState(false);
 
-  // 유효성 검사 모달
   const [openValidationModal, setOpenValidationModal] =
     React.useState(false);
 
@@ -54,32 +54,16 @@ function ProblemRegistPage() {
   // 문제 기본정보
   const handleproblemChange = (e) => {
     const { name, value } = e.target;
-
     dispatch(setProblemInfo({ [name]: value }));
   };
 
-  // 파일 변경
-  const handleFileChange = (index, e) => {
-    const file = e.target.files[0];
-
-    const updatedFiles = [...files];
-    updatedFiles[index] = file;
-
-    setFiles(updatedFiles);
-  };
-
-  // 파일 추가
-  const handleAddFileInput = () => {
-    setFiles((prev) => [...prev, null]);
+  const handleFileChange = (file) => {
+    setFile(file);
   };
 
   // 파일 제거
-  const handleRemoveFileInput = (index) => {
-    if (files.length === 1) return;
-
-    setFiles((prev) =>
-      prev.filter((_, i) => i !== index)
-    );
+  const handleRemoveFileInput = () => {
+    setFile(null);
   };
 
   // 소문제 변경
@@ -106,7 +90,6 @@ function ProblemRegistPage() {
 
   // 유효성 검사
   const validateForm = () => {
-    // 문제 기본정보
     if (!problemInfo.title.trim()) {
       return "문제명을 입력해주세요.";
     }
@@ -119,43 +102,27 @@ function ProblemRegistPage() {
       return "문제 설명을 입력해주세요.";
     }
 
-    // 파일
-    const validFiles = files.filter(
-      (f) => f !== null
-    );
-
-    if (validFiles.length === 0) {
+    if (!file) {
       return "데이터 파일을 추가해주세요.";
     }
 
-    // 소문제
     for (let i = 0; i < problems.length; i++) {
       const p = problems[i];
 
-      if (!p.questionTitle.trim()) {
-        return `소문제 ${i + 1
-          }의 문제 제목을 입력해주세요.`;
-      }
+      if (!p.questionTitle.trim())
+        return `소문제 ${i + 1}의 문제 제목을 입력해주세요.`;
 
-      if (!p.context.trim()) {
-        return `소문제 ${i + 1
-          }의 문제 내용을 입력해주세요.`;
-      }
+      if (!p.context.trim())
+        return `소문제 ${i + 1}의 문제 내용을 입력해주세요.`;
 
-      if (!p.answer.trim()) {
-        return `소문제 ${i + 1
-          }의 문제 정답을 입력해주세요.`;
-      }
+      if (!p.answer.trim())
+        return `소문제 ${i + 1}의 문제 정답을 입력해주세요.`;
 
-      if (!p.hint.trim()) {
-        return `소문제 ${i + 1
-          }의 문제 힌트를 입력해주세요.`;
-      }
+      if (!p.hint.trim())
+        return `소문제 ${i + 1}의 문제 힌트를 입력해주세요.`;
 
-      if (!p.solution.trim()) {
-        return `소문제 ${i + 1
-          }의 문제 풀이를 입력해주세요.`;
-      }
+      if (!p.solution.trim())
+        return `소문제 ${i + 1}의 문제 풀이를 입력해주세요.`;
     }
 
     return null;
@@ -163,29 +130,23 @@ function ProblemRegistPage() {
 
   // 등록
   const handleSubmit = async () => {
+    if (isSubmittingRef.current) return;
+
+    isSubmittingRef.current = true;
+    setIsSubmitting(true);
+
     try {
-      const requestBody =
-        createProblemRequestBody(
-          problemInfo,
-          problems
-        );
+      if (!file) {
+        throw new Error("데이터 파일이 없습니다");
+      }
 
-      const formData = new FormData();
-
-      files.forEach((file) => {
-        if (file) {
-          formData.append("datasetFile", file);
-        }
-      });
-
-      formData.append(
-        "data",
-        new Blob([JSON.stringify(requestBody)], {
-          type: "application/json",
-        })
+      const requestBody = createProblemRequestBody(
+        problemInfo,
+        problems,
+        file
       );
 
-      await createProblem(formData);
+      await createProblem(requestBody, file);
 
       setOpenConfirmModal(false);
       setOpenSuccessModal(true);
@@ -199,25 +160,27 @@ function ProblemRegistPage() {
       );
 
       setOpenValidationModal(true);
+    } finally {
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
     }
   };
 
   // 목록 이동
   const handleGoList = () => {
     dispatch(resetProblemState());
-
     navigate("/admin/problems");
   };
 
   // 등록 모달
   const handleOpenSubmitModal = () => {
+    if (isSubmitting) return;
+
     const errorMessage = validateForm();
 
     if (errorMessage) {
       setValidationMessage(errorMessage);
-
       setOpenValidationModal(true);
-
       return;
     }
 
@@ -236,19 +199,12 @@ function ProblemRegistPage() {
       <ProblemForm
         problemInfo={ problemInfo }
         problems={ problems }
-        files={ files }
-        onProblemInfoChange={
-          handleproblemChange
-        }
+        file={ file }
+        onProblemInfoChange={ handleproblemChange }
         onProblemChange={ handleProblemChange }
         onFileChange={ handleFileChange }
-        onAddFile={ handleAddFileInput }
-        onRemoveFile={
-          handleRemoveFileInput
-        }
-        onAddProblem={ () =>
-          dispatch(addProblem())
-        }
+        onRemoveFile={ handleRemoveFileInput }
+        onAddProblem={ () => dispatch(addProblem()) }
         onRemoveProblem={ (index) =>
           dispatch(removeProblem(index))
         }
@@ -259,6 +215,7 @@ function ProblemRegistPage() {
         <button
           className="submit-btn"
           onClick={ handleOpenSubmitModal }
+          disabled={ isSubmitting }
         >
           등록
         </button>
@@ -266,6 +223,7 @@ function ProblemRegistPage() {
         <button
           className="cancel-btn"
           onClick={ handleOpenCancelModal }
+          disabled={ isSubmitting }
         >
           취소
         </button>
@@ -274,10 +232,12 @@ function ProblemRegistPage() {
       {/* 등록 확인 */ }
       <TwoButtonModal
         isOpen={ openConfirmModal }
-        onClose={ () =>
-          setOpenConfirmModal(false)
-        }
+        onClose={ () => {
+          if (!isSubmitting) setOpenConfirmModal(false);
+        } }
         onConfirm={ handleSubmit }
+        confirmDisabled={ isSubmitting }
+        cancelDisabled={ isSubmitting }
         modalTitle="등록하시겠습니까?"
       />
 
@@ -289,12 +249,10 @@ function ProblemRegistPage() {
         modalContent="문제가 등록되었습니다."
       />
 
-      {/* 유효성 검사 / 에러 */ }
+      {/* 유효성 검사 */ }
       <OneButtonModal
         isOpen={ openValidationModal }
-        onClose={ () =>
-          setOpenValidationModal(false)
-        }
+        onClose={ () => setOpenValidationModal(false) }
         modalTitle="입력 확인"
         modalContent={ validationMessage }
       />
@@ -302,9 +260,7 @@ function ProblemRegistPage() {
       {/* 취소 */ }
       <WarningModal
         isOpen={ openCancelModal }
-        onClose={ () =>
-          setOpenCancelModal(false)
-        }
+        onClose={ () => setOpenCancelModal(false) }
         onConfirm={ handleGoList }
         modalTitle="취소하시겠습니까?"
         modalContent="작성한 내용이 저장되지 않습니다."

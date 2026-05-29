@@ -8,6 +8,8 @@ const TwoButtonModal = ({
     onConfirm,
     modalTitle,
     modalContent,
+    confirmDisabled = false,
+    cancelDisabled = false,
 }) => {
     if (!isOpen) return null;
 
@@ -38,11 +40,19 @@ const TwoButtonModal = ({
 
                 {/* 버튼 */ }
                 <div className="modal-button-wrap">
-                    <button className="twoBtnY" onClick={ onConfirm }>
+                    <button
+                        className="twoBtnY"
+                        onClick={ onConfirm }
+                        disabled={ confirmDisabled }
+                    >
                         확인
                     </button>
 
-                    <button className="twoBtnN" onClick={ onClose }>
+                    <button
+                        className="twoBtnN"
+                        onClick={ onClose }
+                        disabled={ cancelDisabled }
+                    >
                         취소
                     </button>
                 </div>
