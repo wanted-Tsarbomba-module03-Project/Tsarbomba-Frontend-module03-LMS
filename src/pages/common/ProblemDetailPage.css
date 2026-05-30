@@ -156,6 +156,18 @@ body {
   overflow-y: auto;
 }
 
+.execution-output,
+.execution-error {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
+}
+
+.execution-error {
+  color: #b91c1c;
+}
+
 /* 제출 */
 .submit-wrapper {
   width: 100%;

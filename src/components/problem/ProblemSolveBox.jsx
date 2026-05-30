@@ -8,6 +8,7 @@ function ProblemSolveBox({
   code,
   currentHints,
   currentProblem,
+  executionResult,
   hintEnabled,
   isSubmitting,
   showHintToast,
@@ -39,6 +40,7 @@ function ProblemSolveBox({
         activeTab={activeTab}
         currentHints={currentHints}
         currentProblem={currentProblem}
+        executionResult={executionResult}
         submissionResult={submissionResult}
       />
 

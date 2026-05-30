@@ -142,6 +142,12 @@ function Header({ isSimple }) {
             <>
               <span
                 className="header-text-btn"
+                onClick={() => navigate("/user/chat")}
+              >
+                챗봇
+              </span>
+              <span
+                className="header-text-btn"
                 onClick={() => navigate("/user/my-classroom")}
               >
                 내 강의실

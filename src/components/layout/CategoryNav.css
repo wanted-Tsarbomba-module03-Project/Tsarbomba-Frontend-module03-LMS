@@ -54,6 +54,11 @@
   color: #ffffff;
 }
 
+.category-box:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .problem-detail-nav-content {
   max-width: none;
   justify-content: space-between;

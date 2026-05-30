@@ -113,6 +113,10 @@
   border-color: #d1d5db;
 }
 
+.problem-detail-sidebar-item.locked {
+  background-color: #f9fafb;
+}
+
 .problem-detail-sidebar-item.locked-problem {
   opacity: 0.5;
   cursor: not-allowed;
