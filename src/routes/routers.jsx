@@ -41,6 +41,7 @@ import AlramDetailPage from "../pages/admin/alram/AlramDetailPage";
 import GeneralChatPage from "../pages/user/chatbot/GeneralChatPage";
 import ProblemLayout from "../layouts/ProblemLayout";
 import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
+import LectureManagementPage from "../pages/admin/lecture/LectureManagementPage";
 
 export const router = createBrowserRouter([
   {
@@ -86,6 +87,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "users", element: <UserTotalPage /> },
       { path: "user/:id", element: <UserDetailPage /> },
+      { path: "lectures", element: <LectureManagementPage /> },
       { path: "lecture/:id", element: <LectureTotalPage /> },
       { path: "lecture/:id/:lectureId", element: <LectureDetailPage /> },
       { path: "lecture/new", element: <LectureRegistPage /> },
