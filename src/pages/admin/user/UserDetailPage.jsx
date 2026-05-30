@@ -1,40 +1,58 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import UserDetailHeader from "../../../components/admin/UserDetailHeader";
+import UserDetailTabs from "../../../components/admin/UserDetailTabs";
+import UserInfoSection from "../../../components/admin/UserInfoSection";
+import {
+  USER_DETAIL_TABS,
+  getUserDetailColumns,
+} from "../../../components/admin/userDetailColumns";
+import List from "../../../components/common/List";
+import OneButtonModal from "../../../components/common/OneButtonModal";
+import { useUserDetail } from "../../../hooks/useUserDetail";
+import { useUserLists } from "../../../hooks/useUserLists";
+import { toggleUserLock } from "../../../services/adminService";
 import "./UserDetailPage.css";
 
-import List from "../../../../src/components/common/List";
-import OneButtonModal from "../../../../src/components/common/OneButtonModal";
+const COURSE_ID = 1;
 
-import { useUserDetail } from "../../../../src/hooks/useUserDetail";
-import { useUserLists } from "../../../../src/hooks/useUserLists";
-import { toggleUserLock } from "../../../../src/services/adminService";
+// 계정 잠금 상태에 맞는 안내 문구 생성
+const getLockModalContent = (isLocked) => ({
+  title: isLocked ? "계정이 비활성화되었습니다." : "계정이 활성화되었습니다.",
+  content: isLocked
+    ? "해당 회원의 계정이 비활성화되었습니다."
+    : "해당 회원의 계정이 활성화되었습니다.",
+});
 
 function UserDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const BASE_URL = import.meta.env.VITE_API_URL;
-
-  // UI state
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalContent, setModalContent] = useState("");
-
-  const [tab, setTab] = useState("COURSE");
+  const [noticeModal, setNoticeModal] = useState({
+    isOpen: false,
+    title: "",
+    content: "",
+  });
+  const [tab, setTab] = useState(USER_DETAIL_TABS.COURSE);
   const [isLoading, setIsLoading] = useState(false);
 
-  const courseId = 1;
-
-  // hooks (data separation)
   const { user, setUser, loading: userLoading } = useUserDetail(id);
-
   const { listData } = useUserLists({
     tab,
     userId: id,
-    courseId,
+    courseId: COURSE_ID,
   });
 
-  // 회원 상태 변경
+  // 안내 모달 열기
+  const openNoticeModal = (title, content) => {
+    setNoticeModal({
+      isOpen: true,
+      title,
+      content,
+    });
+  };
+
+  // 회원 계정 잠금 상태 변경
   const handleLockToggle = async () => {
     if (isLoading || !user) return;
 
@@ -50,158 +68,53 @@ function UserDetailPage() {
         isLocked: nextLocked,
       }));
 
-      setModalTitle(
-        nextLocked
-          ? "계정이 비활성화되었습니다."
-          : "계정이 활성화되었습니다."
-      );
-
-      setModalContent(
-        nextLocked
-          ? "해당 회원의 계정이 비활성화되었습니다."
-          : "해당 회원의 계정이 활성화되었습니다."
-      );
-
-      setIsModalOpen(true);
+      const modalContent = getLockModalContent(nextLocked);
+      openNoticeModal(modalContent.title, modalContent.content);
     } catch (err) {
       console.error(err);
-
-      setModalTitle("오류 발생");
-      setModalContent("상태 변경 중 오류가 발생했습니다.");
-      setIsModalOpen(true);
+      openNoticeModal("오류 발생", "상태 변경 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
   };
-
-  // columns
-  const courseColumns = [
-    { key: "index", label: "No." },
-    { key: "title", label: "강의명" },
-    {
-      key: "progress",
-      label: "진행도",
-      render: (item) => `${item.progress ?? 0}%`,
-    },
-    { key: "date", label: "등록일" },
-  ];
-
-  const problemColumns = [
-    { key: "index", label: "No." },
-    { key: "problemTitle", label: "문제명" },
-    {
-      key: "submissionStatus",
-      label: "결과",
-    },
-    {
-      key: "submittedAt",
-      label: "제출일",
-      render: (item) => item.submittedAt?.split("T")[0],
-    },
-  ];
 
   if (userLoading || !user) return <div>로딩중...</div>;
 
   return (
     <>
       <div className="user-detail-container">
-        {/* HEADER */ }
-        <div className="page-header">
-          <h2 className="page-title">회원 상세조회</h2>
+        {/* 회원 상세 헤더 */}
+        <UserDetailHeader
+          isLocked={user.isLocked}
+          isLoading={isLoading}
+          onLockToggle={handleLockToggle}
+          onGoList={() => navigate("/admin/users")}
+        />
 
-          <div className="header-btn-group">
-            <button
-              className="gray-btn"
-              onClick={ handleLockToggle }
-              disabled={ isLoading }
-            >
-              { isLoading
-                ? "처리중..."
-                : user.isLocked
-                  ? "정지해제"
-                  : "계정정지" }
-            </button>
+        {/* 회원 기본 정보 */}
+        <UserInfoSection user={user} />
 
-            <button
-              className="gray-btn"
-              onClick={ () => navigate("/admin/users") }
-            >
-              목록으로
-            </button>
-          </div>
-        </div>
+        {/* 강의/문제 목록 탭 */}
+        <UserDetailTabs activeTab={tab} onChangeTab={setTab} />
 
-        {/* USER INFO */ }
-        <div className="info-section">
-          <div className="row">
-            <div className="input-group">
-              <label>이름</label>
-              <div className="readonly-box">{ user.name }</div>
-            </div>
-
-            <div className="input-group">
-              <label>닉네임</label>
-              <div className="readonly-box">{ user.nickname || "-" }</div>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="input-group">
-              <label>이메일</label>
-              <div className="readonly-box">{ user.email }</div>
-            </div>
-
-            <div className="input-group">
-              <label>전화번호</label>
-              <div className="readonly-box">{ user.phone }</div>
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>역할</label>
-            <div className="readonly-box">{ user.role }</div>
-          </div>
-
-          <div className="input-group">
-            <label>계정 상태</label>
-            <div className="readonly-box">
-              { user.isLocked ? "비활성" : "활성" }
-            </div>
-          </div>
-        </div>
-
-        {/* TAB BUTTONS */ }
-        <div className="user-ListBtn-group">
-          <button
-            className={ tab === "COURSE" ? "btn active" : "btn" }
-            onClick={ () => setTab("COURSE") }
-          >
-            강의목록
-          </button>
-
-          <button
-            className={ tab === "PROBLEM" ? "btn active" : "btn" }
-            onClick={ () => setTab("PROBLEM") }
-          >
-            문제목록
-          </button>
-        </div>
-
-        {/* LIST */ }
+        {/* 선택된 탭의 목록 */}
         <div className="list-section">
-          <List
-            data={ listData }
-            columns={ tab === "COURSE" ? courseColumns : problemColumns }
-          />
+          <List data={listData} columns={getUserDetailColumns(tab)} />
         </div>
       </div>
 
-      {/* MODAL */ }
+      {/* 처리 결과 안내 모달 */}
       <OneButtonModal
-        isOpen={ isModalOpen }
-        onClose={ () => setIsModalOpen(false) }
-        modalTitle={ modalTitle }
-        modalContent={ modalContent }
+        isOpen={noticeModal.isOpen}
+        onClose={() =>
+          setNoticeModal({
+            isOpen: false,
+            title: "",
+            content: "",
+          })
+        }
+        modalTitle={noticeModal.title}
+        modalContent={noticeModal.content}
       />
     </>
   );

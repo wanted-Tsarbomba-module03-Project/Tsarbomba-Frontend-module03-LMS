@@ -1,95 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import List from "../../components/common/List";
+import { problemListColumns } from "../../components/problem/problemListColumns";
+import useProblemSets from "../../hooks/useProblemSets";
+import "./ProblemTotalPage.css";
+
+// 현재 경로에 맞는 문제 상세 경로 생성
+const getProblemDetailPath = (pathname, problemSetId) => {
+  if (pathname.startsWith("/admin")) {
+    return `/admin/problem/${problemSetId}`;
+  }
+
+  if (pathname.startsWith("/user")) {
+    return `/user/problem/${problemSetId}`;
+  }
+
+  return null;
+};
 
 function ProblemTotalPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
+  const selectedCategoryId = new URLSearchParams(location.search).get(
+    "categoryId",
+  );
+  const problemSets = useProblemSets(selectedCategoryId);
 
-  const BASE_URL = import.meta.env.VITE_API_URL;
-
-  // 문제 목록
-  const [problem, setProblem] = useState([]);
-
-  // 기본 카테고리 ID
-  const categoryId = 2001;
-
-  // 난이도 한글 변환
-  const difficultyMap = {
-    EASY: "쉬움",
-    MEDIUM: "보통",
-    HARD: "어려움",
-  };
-
-  // 리스트 컬럼
-  const columns = [
-    {
-      key: "problemNumber",
-      label: "No.",
-    },
-    {
-      key: "title",
-      label: "문제명",
-    },
-    {
-      key: "description",
-      label: "문제 설명",
-    },
-    {
-      key: "difficulty",
-      label: "난이도",
-      render: (item) =>
-        difficultyMap[item.difficulty] || item.difficulty,
-    },
-    {
-      key: "accuracyRate",
-      label: "정답률",
-      render: (item) => `${item.accuracyRate}%`,
-    },
-    {
-      key: "createdAt",
-      label: "등록일",
-      render: (item) => {
-        if (!item.createdAt) return "-";
-
-        const date = new Date(item.createdAt);
-
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, "0");
-        const dd = String(date.getDate()).padStart(2, "0");
-
-        return `${yyyy}.${mm}.${dd}`;
-      },
-    },
-  ];
-
-  // 문제 목록 조회
-  useEffect(() => {
-    fetch(`${BASE_URL}/api/v1/problem-sets`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`서버 오류: ${res.status}`);
-        }
-
-        return res.json();
-      })
-      .then((result) => {
-        // console.log("API 응답:", result);
-
-        setProblem(result.data || []);
-      })
-      .catch((err) => {
-        console.error("문제 목록 조회 실패:", err);
-      });
-  }, []);
-
-  // 셀 클릭 → 상세 이동
+  // 문제 행 클릭 시 상세 화면으로 이동
   const handleRowClick = (item) => {
     const id = item.problemSetId;
 
@@ -98,13 +35,9 @@ function ProblemTotalPage() {
       return;
     }
 
-    let detailPath = "";
+    const detailPath = getProblemDetailPath(location.pathname, id);
 
-    if (location.pathname.startsWith("/admin")) {
-      detailPath = `/admin/problem/${id}`;
-    } else if (location.pathname.startsWith("/user")) {
-      detailPath = `/user/problem/${id}`;
-    } else {
+    if (!detailPath) {
       console.error("지원하지 않는 경로:", location.pathname);
       return;
     }
@@ -113,19 +46,27 @@ function ProblemTotalPage() {
   };
 
   return (
-    <div>
-      <h2>문제 관리</h2>
+    <div className="problem-total-page">
+      <h2>{isAdminPath ? "문제 관리" : "문제풀이"}</h2>
 
-      <div style={ { marginBottom: "20px" } }>
-        <button onClick={ () => navigate("/admin/problem/new") }>
-          등록하기
-        </button>
-      </div>
+      {/* 관리자 문제 등록 버튼 */}
+      {isAdminPath && (
+        <div className="problem-total-actions">
+          <button
+            className="problem-register-button"
+            type="button"
+            onClick={() => navigate("/admin/problem/new")}
+          >
+            등록하기
+          </button>
+        </div>
+      )}
 
+      {/* 문제 목록 */}
       <List
-        data={ problem }
-        columns={ columns }
-        onRowClick={ handleRowClick }
+        data={problemSets}
+        columns={problemListColumns}
+        onRowClick={handleRowClick}
       />
     </div>
   );

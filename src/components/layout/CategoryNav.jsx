@@ -1,8 +1,14 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import "./CategoryNav.css";
 import "../common/reset.css";
 
-function CategoryNav() {
+function CategoryNav({
+  variant = "category",
+  onBack,
+  onRun,
+}) {
+  const location = useLocation();
   const categories = [
     "전체",
     "데이터 분석",
@@ -13,6 +19,32 @@ function CategoryNav() {
     "시각화",
     "빅데이터",
   ];
+
+  if (variant === "category" && location.pathname.startsWith("/user/problem/")) {
+    return null;
+  }
+
+  if (variant === "problem-detail") {
+    return (
+      <nav className="category-nav problem-detail-nav">
+        <div className="category-nav-content problem-detail-nav-content">
+          <button
+            className="category-box problem-detail-nav-button"
+            onClick={onBack}
+          >
+            뒤로가기
+          </button>
+
+          <button
+            className="category-box active problem-detail-nav-button"
+            onClick={onRun}
+          >
+            실행하기
+          </button>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="category-nav">

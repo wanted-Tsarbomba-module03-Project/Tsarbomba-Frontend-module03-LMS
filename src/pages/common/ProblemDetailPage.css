@@ -1,170 +1,31 @@
-* {
+/* * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #f7f7f7;
-  font-family: sans-serif;
-}
+} */
 
 .problem-detail-container {
   width: 100%;
-  min-height: 100vh;
-  background: #f7f7f7;
-}
-
-/* 상단 */
-.top-header {
-  width: 100%;
-  height: 110px;
-
-  padding: 24px 40px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  background: #f3f4f6;
-
-  border-bottom: 1px solid #e5e7eb;
-}
-
-/* 뒤로가기 */
-.back-button {
-  width: 120px;
-  height: 56px;
-
-  border: none;
-  border-radius: 14px;
-
-  background: #ffffff;
-
-  font-size: 20px;
-  font-weight: 500;
-  color: #4b5563;
-
-  cursor: pointer;
-
-  transition: all 0.2s ease;
-}
-
-.back-button:hover {
-  background: #f8f8f8;
-}
-
-/* 실행하기 */
-.run-button {
-  width: 140px;
-  height: 56px;
-
-  border: none;
-  border-radius: 14px;
-
-  background: #1d2b8f;
-
-  color: white;
-
-  font-size: 20px;
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-.run-button:hover {
-  background: #16206e;
+  min-height: 80vh;
 }
 
 /* 메인 */
-.main-layout {
+.problem-detail-main {
   display: flex;
   width: 100%;
-  height: calc(100vh - 110px);
-}
-
-/* 사이드바 */
-.sidebar {
-  width: 280px;
-
-  padding: 24px;
-
-  background: white;
-
-  border-right: 1px solid #e5e7eb;
-}
-
-.sidebar h2 {
-  margin-bottom: 24px;
-
-  font-size: 32px;
-  font-weight: 700;
-}
-
-/* 문제 버튼 */
-.problem-button {
-  width: 100%;
-
-  padding: 22px 18px;
-
-  margin-bottom: 16px;
-
-  border-radius: 18px;
-
-  border: 2px solid #1f2937;
-
-  background: white;
-
-  text-align: left;
-
-  font-size: 22px;
-  font-weight: 700;
-
-  color: #1f2937;
-
-  cursor: pointer;
-}
-
-/* 선택된 문제 */
-.problem-button.selected {
-  background: #1d248f;
-  color: white;
-
-  border: none;
-}
-
-/* 틀린 문제 */
-.problem-button.wrong {
-  background: #ececec;
-
-  border: 2px solid #1f2937;
-
-  color: #1f2937;
-}
-
-/* 맞춘 문제 */
-.problem-button.solved {
-  background: #9eb9e5;
-
-  border: 2px solid #1f2937;
-
-  color: #1f2937;
-}
-
-/* 잠긴 문제 */
-.locked-problem {
-  opacity: 0.5;
-
-  cursor: not-allowed;
+  min-height: calc(80vh - 80px);
 }
 
 /* 콘텐츠 */
-.content {
+.problem-detail-content {
   flex: 1;
 
   display: flex;
-  gap: 24px;
+  gap: 16px;
 
-  padding: 24px;
+  padding: 14px 18px;
 }
 
 /* 문제/풀이 박스 */
@@ -172,39 +33,41 @@ body {
 .solve-box {
   flex: 1;
 
-  background: white;
-
   border-radius: 16px;
 
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e8e8e8;
 
-  padding: 24px;
+  padding: 16px;
 }
 
 .problem-box h2,
 .solve-box h2 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
-  font-size: 36px;
+  font-size: 26px;
   font-weight: 700;
 }
 
 .problem-content {
   white-space: pre-wrap;
 
-  font-size: 22px;
-  line-height: 1.6;
+  font-size: 18px;
+  line-height: 1.45;
 }
 
 /* 에디터 */
+.editor-section {
+  position: relative;
+}
+
 .editor-section textarea {
   width: 100%;
-  height: 340px;
+  height: 220px;
 
   border-radius: 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #e8e8e8;
 
-  padding: 18px;
+  padding: 12px;
 
   resize: none;
 
@@ -212,45 +75,54 @@ body {
   font-family: monospace;
 }
 
-/* 힌트 */
-.hint-area {
-  margin-top: 20px;
-}
-
+/* 토스트 */
 .hint-toast {
-  width: 100%;
+  position: absolute;
 
-  padding: 22px;
+  top: 70px;
+  left: 50%;
 
-  background: #f3f4f6;
+  transform: translateX(-50%);
 
-  border: 1px solid #d1d5db;
+  z-index: 1000;
+
+  padding: 16px 24px;
+
+  background: rgba(29, 43, 143, 0.95);
+  color: white;
 
   border-radius: 12px;
 
-  text-align: center;
-
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  animation: fadeInOut 3s ease;
+
+  white-space: nowrap;
+  width: max-content;
 }
 
 /* 탭 */
 .tabs {
   display: flex;
+  gap: 8px;
 
-  margin-top: 24px;
+  margin: 12px 0 8px;
 }
 
 .tabs button {
-  min-width: 120px;
+  min-width: 104px;
 
-  padding: 14px 18px;
+  padding: 9px 14px;
 
-  border: 1px solid #d1d5db;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
 
   background: white;
 
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
 
   cursor: pointer;
@@ -270,13 +142,12 @@ body {
 /* 하단 패널 */
 .bottom-panel {
   width: 100%;
-  height: 220px;
+  height: 140px;
 
-  padding: 20px;
+  padding: 12px 10px;
 
-  border: 1px solid #d1d5db;
-
-  border-top: none;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
 
   overflow-y: auto;
 }
@@ -288,12 +159,12 @@ body {
   display: flex;
   justify-content: flex-end;
 
-  margin-top: 24px;
+  margin-top: 12px;
 }
 
 .submit-button {
-  width: 140px;
-  height: 56px;
+  width: 120px;
+  height: 44px;
 
   border: none;
   border-radius: 14px;
@@ -302,7 +173,7 @@ body {
 
   color: white;
 
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
 
   cursor: pointer;

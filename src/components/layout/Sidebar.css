@@ -71,10 +71,51 @@
   background-color: #f9fafb;
 }
 
+.sidebar-button {
+  border: none;
+  background-color: transparent;
+  font-family: inherit;
+}
+
 .sidebar-item.active {
   background-color: #1a237e;
   color: #ffffff;
   font-size: 18px;
+}
+
+.problem-detail-sidebar-content .sidebar-title {
+  margin-bottom: 14px;
+}
+
+.problem-detail-sidebar-item {
+  height: auto;
+  min-height: 42px;
+  border: 1px solid #e8e8e8;
+  background-color: #ffffff;
+  font-weight: 700;
+  text-align: left;
+  font-size: 14px;
+}
+
+.problem-detail-sidebar-item.selected,
+.problem-detail-sidebar-item.active {
+  background-color: #1a237e;
+  color: #ffffff;
+}
+
+.problem-detail-sidebar-item.solved {
+  background-color: #e7eefb;
+  border-color: #9eb9e5;
+}
+
+.problem-detail-sidebar-item.wrong {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.problem-detail-sidebar-item.locked-problem {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .chat-new-button {

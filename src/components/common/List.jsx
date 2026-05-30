@@ -1,7 +1,13 @@
 import './List.css';
-function List({ data, columns, onRowClick }) {
-    return (
-        <table>
+function List({
+    data,
+    columns,
+    onRowClick,
+    scrollable = true,
+    pagination = null,
+}) {
+    const table = (
+        <table className="list-table">
             <thead>
                 <tr>
                     { columns.map((col) => (
@@ -31,6 +37,22 @@ function List({ data, columns, onRowClick }) {
                 )) }
             </tbody>
         </table>
+    );
+
+    return (
+        <div className="list-container">
+            { scrollable ? (
+                <div className="list-scroll-area">
+                    { table }
+                </div>
+            ) : table }
+
+            { pagination && (
+                <div className="list-pagination">
+                    { pagination }
+                </div>
+            ) }
+        </div>
     );
 }
 

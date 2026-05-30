@@ -3,6 +3,9 @@ import { useLocation, useParams } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+const updateArrayItem = (items, index, value) =>
+  items.map((item, itemIndex) => (itemIndex === index ? value : item));
+
 const normalizeProblemSet = (payload) => {
   const data = payload?.data ?? payload;
   const problems = Array.isArray(data?.problems)
@@ -39,8 +42,12 @@ function useProblemDetail() {
   const [hintEnabled, setHintEnabled] = useState([]);
   const [solutionEnabled, setSolutionEnabled] = useState([]);
   const [activeTab, setActiveTab] = useState("result");
+  const [hints, setHints] = useState([]);
+  const [submissionResult, setSubmissionResult] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [emptySubmitModalOpen, setEmptySubmitModalOpen] = useState(false);
   const [warningModalOpen, setWarningModalOpen] = useState(false);
 
   useEffect(() => {
@@ -75,6 +82,8 @@ function useProblemDetail() {
         setProblemStates(data.problems.map(() => "unsolved"));
         setHintEnabled(data.problems.map(() => false));
         setSolutionEnabled(data.problems.map(() => false));
+        setHints(data.problems.map(() => []));
+        setSubmissionResult(null);
         setUserCodes(data.problems.map((problem) => problem.startCode ?? ""));
         setCode(data.problems[initialIndex]?.startCode ?? "");
       } catch (error) {
@@ -88,6 +97,7 @@ function useProblemDetail() {
   }, [problemSetId, userId]);
 
   const currentProblem = problemSet?.problems[currentIndex];
+  const currentHints = hints[currentIndex] ?? [];
 
   const canMoveProblem = (index) => {
     if (index === 0) return true;
@@ -104,40 +114,112 @@ function useProblemDetail() {
     setCurrentIndex(index);
     setCode(updatedCodes[index] ?? "");
     setActiveTab("result");
+    setSubmissionResult(null);
   };
 
-  const handleSubmit = () => {
-    const answer = currentProblem?.answer?.trim();
-    const userAnswer = code.trim();
+  const fetchHints = async (problemId, index) => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/v1/problems/${problemId}/hints`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
 
-    if (answer && userAnswer.includes(answer)) {
-      const updatedStates = [...problemStates];
-      updatedStates[currentIndex] = "solved";
-      setProblemStates(updatedStates);
+      if (!response.ok) {
+        throw new Error(`Hint request failed: ${response.status}`);
+      }
 
-      const updatedHint = [...hintEnabled];
-      updatedHint[currentIndex] = true;
-      setHintEnabled(updatedHint);
+      const result = await response.json();
+      const hintList = Array.isArray(result?.data) ? result.data : [];
 
-      const updatedSolution = [...solutionEnabled];
-      updatedSolution[currentIndex] = true;
-      setSolutionEnabled(updatedSolution);
+      setHints((prevHints) => updateArrayItem(prevHints, index, hintList));
 
-      setSuccessModalOpen(true);
-    } else {
-      const updatedStates = [...problemStates];
-      updatedStates[currentIndex] = "wrong";
-      setProblemStates(updatedStates);
+      return hintList;
+    } catch (error) {
+      console.error("Hint request failed:", error);
+      return [];
+    }
+  };
 
-      const updatedHint = [...hintEnabled];
-      updatedHint[currentIndex] = true;
-      setHintEnabled(updatedHint);
+  const handleSubmit = async () => {
+    if (!currentProblem?.problemId || isSubmitting) return;
 
-      setShowHintToast(true);
+    if (!code.trim()) {
+      setEmptySubmitModalOpen(true);
+      return;
+    }
 
-      setTimeout(() => {
-        setShowHintToast(false);
-      }, 2000);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/v1/problems/${currentProblem.problemId}/submissions`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            code,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Submission request failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const submission = result?.data ?? result;
+
+      setSubmissionResult(submission);
+
+      if (submission?.isCorrect) {
+        setProblemStates((prevStates) =>
+          updateArrayItem(prevStates, currentIndex, "solved"),
+        );
+        setHintEnabled((prevHint) =>
+          updateArrayItem(prevHint, currentIndex, true),
+        );
+        setSolutionEnabled((prevSolution) =>
+          updateArrayItem(prevSolution, currentIndex, true),
+        );
+
+        if (!hints[currentIndex]?.length) {
+          await fetchHints(currentProblem.problemId, currentIndex);
+        }
+
+        setSuccessModalOpen(true);
+      } else {
+        setProblemStates((prevStates) =>
+          updateArrayItem(prevStates, currentIndex, "wrong"),
+        );
+        setHintEnabled((prevHint) =>
+          updateArrayItem(prevHint, currentIndex, true),
+        );
+
+        if (!hints[currentIndex]?.length) {
+          await fetchHints(currentProblem.problemId, currentIndex);
+        }
+
+        setShowHintToast(true);
+
+        setTimeout(() => {
+          setShowHintToast(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Submission request failed:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -185,8 +267,20 @@ function useProblemDetail() {
     activeTab,
     setActiveTab,
 
+    currentHints,
+    hints,
+    setHints,
+
+    submissionResult,
+    setSubmissionResult,
+
+    isSubmitting,
+
     successModalOpen,
     setSuccessModalOpen,
+
+    emptySubmitModalOpen,
+    setEmptySubmitModalOpen,
 
     warningModalOpen,
     setWarningModalOpen,
