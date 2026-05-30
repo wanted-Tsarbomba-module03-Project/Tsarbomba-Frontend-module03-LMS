@@ -1,108 +1,109 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useParams } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
-const PROBLEM_SET_ID = 3001;
 
-// ✅ mock 데이터
-const DUMMY_PROBLEM_SET = {
-  id: 3001,
-  problems: [
-    {
-      title: "1번 문제",
-      content: "두 수를 더하는 함수를 작성하세요.",
-      startCode: "function add(a, b) {\n  return a + b;\n}",
-      answer: "return a + b",
-      hint: "a와 b를 더하면 됩니다.",
-      explanation: "두 매개변수를 더해 반환합니다.",
-    },
-    {
-      title: "2번 문제",
-      content: "문자열을 대문자로 변환하세요.",
-      startCode: "function toUpper(str) {\n\n}",
-      answer: "toUpperCase",
-      hint: "JavaScript 내장 메서드를 사용하세요.",
-      explanation: "toUpperCase()를 사용하면 됩니다.",
-    },
-    {
-      title: "3번 문제",
-      content: "배열의 길이를 반환하세요.",
-      startCode: "function getLength(arr) {\n\n}",
-      answer: "length",
-      hint: "배열의 length 속성을 사용하세요.",
-      explanation: "arr.length를 반환합니다.",
-    },
-  ],
+const updateArrayItem = (items, index, value) =>
+  items.map((item, itemIndex) => (itemIndex === index ? value : item));
+
+const normalizeProblemSet = (payload) => {
+  const data = payload?.data ?? payload;
+  const problems = Array.isArray(data?.problems)
+    ? data.problems
+    : data?.problem
+      ? [data.problem]
+      : [];
+
+  return {
+    ...data,
+    id: data?.problemSetId ?? data?.id,
+    problems,
+  };
 };
 
-const USE_MOCK = true;
-
 function useProblemDetail() {
+  const { id: problemSetId } = useParams();
+  const { search } = useLocation();
+
+  const userId = useMemo(() => {
+    const searchParams = new URLSearchParams(search);
+    return searchParams.get("userId") ?? localStorage.getItem("userId") ?? "";
+  }, [search]);
+
   const [problemSet, setProblemSet] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [code, setCode] = useState("");
 
-  // 문제별 코드 저장
   const [userCodes, setUserCodes] = useState([]);
-
   const [showHintToast, setShowHintToast] = useState(false);
 
   // unsolved | wrong | solved
   const [problemStates, setProblemStates] = useState([]);
-
-  // 힌트/강의 활성화
   const [hintEnabled, setHintEnabled] = useState([]);
-
-  // 풀이 활성화
   const [solutionEnabled, setSolutionEnabled] = useState([]);
-
   const [activeTab, setActiveTab] = useState("result");
+  const [hints, setHints] = useState([]);
+  const [submissionResult, setSubmissionResult] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 모달 상태
   const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [emptySubmitModalOpen, setEmptySubmitModalOpen] = useState(false);
   const [warningModalOpen, setWarningModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchProblemSet();
-  }, []);
-
-  const fetchProblemSet = async () => {
-    try {
-      let data;
-
-      // mock 모드
-      if (USE_MOCK) {
-        data = DUMMY_PROBLEM_SET;
-      } else {
-        const res = await fetch(
-          `${BASE_URL}/api/v1/problem-sets/${PROBLEM_SET_ID}`,
+    const fetchProblemSet = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/api/v1/problem-sets/${problemSetId}?userId=${encodeURIComponent(userId)}`,
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+            },
+          },
         );
-        data = await res.json();
+
+        if (!response.ok) {
+          throw new Error(`Problem set request failed: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const data = normalizeProblemSet(result);
+        const initialIndex = Math.max(
+          data.problems.findIndex(
+            (problem) => problem.problemNumber === data.currentProblemNumber,
+          ),
+          0,
+        );
+
+        setProblemSet(data);
+        setCurrentIndex(initialIndex);
+        setProblemStates(data.problems.map(() => "unsolved"));
+        setHintEnabled(data.problems.map(() => false));
+        setSolutionEnabled(data.problems.map(() => false));
+        setHints(data.problems.map(() => []));
+        setSubmissionResult(null);
+        setUserCodes(data.problems.map((problem) => problem.startCode ?? ""));
+        setCode(data.problems[initialIndex]?.startCode ?? "");
+      } catch (error) {
+        console.error("Problem set detail request failed:", error);
       }
+    };
 
-      setProblemSet(data);
-
-      setProblemStates(data.problems.map(() => "unsolved"));
-      setHintEnabled(data.problems.map(() => false));
-      setSolutionEnabled(data.problems.map(() => false));
-
-      // 문제별 코드 저장
-      setUserCodes(data.problems.map((problem) => problem.startCode));
-
-      setCode(data.problems[0].startCode);
-    } catch (error) {
-      console.error(error);
+    if (problemSetId) {
+      fetchProblemSet();
     }
-  };
+  }, [problemSetId, userId]);
 
   const currentProblem = problemSet?.problems[currentIndex];
+  const currentHints = hints[currentIndex] ?? [];
 
-  // 다음 문제 이동 가능 여부
   const canMoveProblem = (index) => {
     if (index === 0) return true;
     return problemStates[index - 1] === "solved";
   };
 
-  // 문제 이동
   const moveProblem = (index) => {
     if (!canMoveProblem(index)) return;
 
@@ -111,47 +112,117 @@ function useProblemDetail() {
 
     setUserCodes(updatedCodes);
     setCurrentIndex(index);
-    setCode(updatedCodes[index]);
+    setCode(updatedCodes[index] ?? "");
     setActiveTab("result");
+    setSubmissionResult(null);
   };
 
-  // 제출
-  const handleSubmit = () => {
-    const answer = currentProblem.answer.trim();
-    const userAnswer = code.trim();
+  const fetchHints = async (problemId, index) => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/v1/problems/${problemId}/hints`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Accept: "application/json",
+          },
+        },
+      );
 
-    if (userAnswer.includes(answer)) {
-      const updatedStates = [...problemStates];
-      updatedStates[currentIndex] = "solved";
-      setProblemStates(updatedStates);
+      if (!response.ok) {
+        throw new Error(`Hint request failed: ${response.status}`);
+      }
 
-      const updatedHint = [...hintEnabled];
-      updatedHint[currentIndex] = true;
-      setHintEnabled(updatedHint);
+      const result = await response.json();
+      const hintList = Array.isArray(result?.data) ? result.data : [];
 
-      const updatedSolution = [...solutionEnabled];
-      updatedSolution[currentIndex] = true;
-      setSolutionEnabled(updatedSolution);
+      setHints((prevHints) => updateArrayItem(prevHints, index, hintList));
 
-      setSuccessModalOpen(true);
-    } else {
-      const updatedStates = [...problemStates];
-      updatedStates[currentIndex] = "wrong";
-      setProblemStates(updatedStates);
-
-      const updatedHint = [...hintEnabled];
-      updatedHint[currentIndex] = true;
-      setHintEnabled(updatedHint);
-
-      setShowHintToast(true);
-
-      setTimeout(() => {
-        setShowHintToast(false);
-      }, 2000);
+      return hintList;
+    } catch (error) {
+      console.error("Hint request failed:", error);
+      return [];
     }
   };
 
-  // 버튼 스타일
+  const handleSubmit = async () => {
+    if (!currentProblem?.problemId || isSubmitting) return;
+
+    if (!code.trim()) {
+      setEmptySubmitModalOpen(true);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/v1/problems/${currentProblem.problemId}/submissions`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            code,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Submission request failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const submission = result?.data ?? result;
+
+      setSubmissionResult(submission);
+
+      if (submission?.isCorrect) {
+        setProblemStates((prevStates) =>
+          updateArrayItem(prevStates, currentIndex, "solved"),
+        );
+        setHintEnabled((prevHint) =>
+          updateArrayItem(prevHint, currentIndex, true),
+        );
+        setSolutionEnabled((prevSolution) =>
+          updateArrayItem(prevSolution, currentIndex, true),
+        );
+
+        if (!hints[currentIndex]?.length) {
+          await fetchHints(currentProblem.problemId, currentIndex);
+        }
+
+        setSuccessModalOpen(true);
+      } else {
+        setProblemStates((prevStates) =>
+          updateArrayItem(prevStates, currentIndex, "wrong"),
+        );
+        setHintEnabled((prevHint) =>
+          updateArrayItem(prevHint, currentIndex, true),
+        );
+
+        if (!hints[currentIndex]?.length) {
+          await fetchHints(currentProblem.problemId, currentIndex);
+        }
+
+        setShowHintToast(true);
+
+        setTimeout(() => {
+          setShowHintToast(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Submission request failed:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const getProblemButtonClass = (state, isSelected) => {
     if (isSelected) return "problem-button selected";
     if (state === "solved") return "problem-button solved";
@@ -159,7 +230,6 @@ function useProblemDetail() {
     return "problem-button";
   };
 
-  // 뒤로가기
   const handleBackButton = () => {
     setWarningModalOpen(true);
   };
@@ -197,8 +267,20 @@ function useProblemDetail() {
     activeTab,
     setActiveTab,
 
+    currentHints,
+    hints,
+    setHints,
+
+    submissionResult,
+    setSubmissionResult,
+
+    isSubmitting,
+
     successModalOpen,
     setSuccessModalOpen,
+
+    emptySubmitModalOpen,
+    setEmptySubmitModalOpen,
 
     warningModalOpen,
     setWarningModalOpen,
