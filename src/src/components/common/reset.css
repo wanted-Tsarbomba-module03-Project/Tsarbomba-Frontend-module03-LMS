@@ -1,0 +1,19 @@
+@font-face {
+  font-family: "Pretendard";
+  src: url("../../assets/font/PretendardVariable.woff2")
+    format("woff2-variations");
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
+body,
+p,
+div {
+  font-family: "Pretendard", sans-serif;
+}

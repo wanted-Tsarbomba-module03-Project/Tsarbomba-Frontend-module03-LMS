@@ -1,0 +1,33 @@
+.problem-total-page h2 {
+  margin-bottom: 20px;
+}
+
+.problem-total-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.problem-register-button {
+  min-width: 96px;
+  height: 40px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #1d2b8f;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.problem-register-button:hover {
+  background: #16206e;
+  box-shadow: 0 4px 10px rgba(29, 43, 143, 0.2);
+}
+
+.problem-register-button:focus-visible {
+  outline: 3px solid rgba(29, 43, 143, 0.25);
+  outline-offset: 2px;
+}

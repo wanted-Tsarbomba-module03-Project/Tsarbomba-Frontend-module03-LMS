@@ -1,0 +1,292 @@
+/* * {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+} */
+
+.problem-detail-container {
+  width: 100%;
+  min-height: 80vh;
+}
+
+/* 메인 */
+.problem-detail-main {
+  position: relative;
+
+  display: flex;
+  width: 100%;
+  min-height: calc(80vh - 80px);
+
+  overflow: hidden;
+}
+
+/* 콘텐츠 */
+.problem-detail-content {
+  flex: 1;
+
+  display: flex;
+  gap: 16px;
+
+  padding: 14px 18px;
+}
+
+/* 문제/풀이 박스 */
+.problem-box,
+.solve-box {
+  flex: 1;
+
+  border-radius: 16px;
+
+  border: 1px solid #e8e8e8;
+
+  padding: 16px;
+}
+
+.problem-box h2,
+.solve-box h2 {
+  margin-bottom: 10px;
+
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.problem-content {
+  white-space: pre-wrap;
+
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+/* 에디터 */
+.editor-section {
+  position: relative;
+}
+
+.editor-section textarea {
+  width: 100%;
+  height: 220px;
+
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+
+  padding: 12px;
+
+  resize: none;
+
+  font-size: 16px;
+  font-family: monospace;
+}
+
+/* 토스트 */
+.hint-toast {
+  position: absolute;
+
+  top: 70px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 1000;
+
+  padding: 16px 24px;
+
+  background: rgba(29, 43, 143, 0.95);
+  color: white;
+
+  border-radius: 12px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  animation: fadeInOut 3s ease;
+
+  white-space: nowrap;
+  width: max-content;
+}
+
+/* 탭 */
+.tabs {
+  display: flex;
+  gap: 8px;
+
+  margin: 12px 0 8px;
+}
+
+.tabs button {
+  min-width: 104px;
+
+  padding: 9px 14px;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+
+  background: white;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.active-tab {
+  background: #f3f4f6 !important;
+}
+
+.disabled-button {
+  background: #dddddd !important;
+  color: #7b7b7b;
+
+  cursor: not-allowed !important;
+}
+
+/* 하단 패널 */
+.bottom-panel {
+  width: 100%;
+  height: 140px;
+
+  padding: 12px 10px;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+
+  overflow-y: auto;
+}
+
+/* 제출 */
+.submit-wrapper {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 12px;
+}
+
+.submit-button {
+  width: 120px;
+  height: 44px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: #1d2b8f;
+
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background: #16206e;
+}
+
+.problem-chat-panel {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  z-index: 20;
+
+  width: min(420px, calc(100% - 36px));
+  height: calc(100% - 28px);
+  min-height: 560px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  color: #1f2937;
+  background: #ffffff;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(24px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.problem-chat-panel.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.problem-chat-header {
+  min-height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  border-bottom: 1px solid #e8e8e8;
+  background: #ffffff;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.problem-chat-new-button {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #111111;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111111;
+
+  font-size: 30px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.problem-chat-panel .chat-message-container {
+  padding: 22px 18px;
+}
+
+.problem-chat-panel .chat-message {
+  max-width: 86%;
+}
+
+.problem-chat-panel .chat-input-wrapper {
+  padding: 14px 18px;
+}
+
+.problem-chat-panel .chat-send-button {
+  min-width: 76px;
+}
+
+@media (max-width: 768px) {
+  .problem-detail-main {
+    overflow: visible;
+  }
+
+  .problem-chat-panel {
+    position: fixed;
+    top: 74px;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+
+    width: auto;
+    height: auto;
+    min-height: 0;
+  }
+}
