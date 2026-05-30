@@ -1,0 +1,113 @@
+.admin-table-control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.admin-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.admin-actions-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-sort-select {
+  padding: 8px 32px 8px 12px;
+  font-size: 14px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  outline: none;
+  background-color: #ffffff;
+  color: #1f2937;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+}
+
+.admin-create-btn {
+  background-color: #1a237e;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.admin-create-btn:hover {
+  background-color: #111751;
+}
+
+.admin-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-data-table th {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.no-data-td {
+  text-align: center;
+  padding: 60px 0;
+  color: #6b7280;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+.lecture-manage-loading-view {
+  text-align: center;
+  padding: 100px 0;
+  font-size: 16px;
+  color: #6b7280;
+  font-weight: 500;
+  background-color: #ffffff;
+}
+
+.status-badge-btn {
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.status-badge-btn.status-active {
+  border: 1px solid #1a237e;
+  color: #1a237e;
+}
+
+.status-badge-btn.status-active:hover {
+  background-color: #1a237e;
+  color: #ffffff;
+}
+
+.status-badge-btn.status-draft {
+  border: 1px solid #fb2c36;
+  color: #fb2c36;
+}
+
+.status-badge-btn.status-draft:hover {
+  background-color: #fb2c36;
+  color: #ffffff;
+}
