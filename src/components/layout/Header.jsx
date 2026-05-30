@@ -18,17 +18,26 @@ function Header({ isSimple }) {
   const [nickname, setNickname] = useState(
     localStorage.getItem("userNickname") || "닉네임",
   );
+  // 현재 유저의 role 상태
+  const [userRole, setUserRole] = useState(
+    localStorage.getItem("userRole") || "",
+  );
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const syncHeaderStatus = () => {
     const savedNickname = localStorage.getItem("userNickname");
+    const savedRole = localStorage.getItem("userRole");
+
     if (savedNickname) {
       setIsLoggedIn(true);
       setNickname(savedNickname);
+      setUserRole(savedRole || "");
     } else {
       setIsLoggedIn(false);
       setNickname("닉네임");
+      setUserRole("");
     }
   };
 
@@ -97,11 +106,17 @@ function Header({ isSimple }) {
               alt="로고"
               onClick={() => navigate("/")}
             />
+            <span className="header-logo-text" onClick={() => navigate("/")}>
+              codebomba
+            </span>
           </div>
         </div>
       </header>
     );
   }
+
+  // 관리자(ADMIN, OPERATOR) 여부 확인
+  const isManagementRole = userRole === "ADMIN" || userRole === "OPERATOR";
 
   return (
     <header className="header">
@@ -113,7 +128,9 @@ function Header({ isSimple }) {
             alt="로고"
             onClick={() => navigate("/")}
           />
-          codebomba
+          <span className="header-logo-text" onClick={() => navigate("/")}>
+            codebomba
+          </span>
         </div>
 
         <div className="header-middle">
@@ -121,18 +138,22 @@ function Header({ isSimple }) {
         </div>
 
         <div className="header-right">
-          <span
-            className="header-text-btn"
-            onClick={() => navigate("/user/lectures")}
-          >
-            내 강의실
-          </span>
-          <span
-            className="header-text-btn"
-            onClick={() => navigate("/user/problems")}
-          >
-            문제풀이
-          </span>
+          {isLoggedIn && !isManagementRole && (
+            <>
+              <span
+                className="header-text-btn"
+                onClick={() => navigate("/user/lectures")}
+              >
+                내 강의실
+              </span>
+              <span
+                className="header-text-btn"
+                onClick={() => navigate("/user/problems")}
+              >
+                문제풀이
+              </span>
+            </>
+          )}
 
           {!isLoggedIn ? (
             <button
@@ -161,15 +182,17 @@ function Header({ isSimple }) {
               </button>
               {isDropdownOpen && (
                 <div className="header-dropdown-box">
-                  <div
-                    className="header-dropdown-item"
-                    onClick={() => {
-                      navigate("/user/introduce");
-                      setIsDropdownOpen(false);
-                    }}
-                  >
-                    마이페이지
-                  </div>
+                  {!isManagementRole && (
+                    <div
+                      className="header-dropdown-item"
+                      onClick={() => {
+                        navigate("/user/introduce");
+                        setIsDropdownOpen(false);
+                      }}
+                    >
+                      마이페이지
+                    </div>
+                  )}
                   <div
                     className="header-dropdown-item"
                     onClick={handleLogoutClick}
