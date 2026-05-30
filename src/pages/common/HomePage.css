@@ -1,0 +1,31 @@
+.homepage-lecture-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px 20px;
+  width: 100%;
+}
+
+.homepage-status-placeholder {
+  text-align: center;
+  padding: 160px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+@media (max-width: 1200px) {
+  .homepage-lecture-grid-layout {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .homepage-lecture-grid-layout {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .homepage-lecture-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}

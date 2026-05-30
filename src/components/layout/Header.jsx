@@ -142,7 +142,7 @@ function Header({ isSimple }) {
             <>
               <span
                 className="header-text-btn"
-                onClick={() => navigate("/user/lectures")}
+                onClick={() => navigate("/user/my-classroom")}
               >
                 내 강의실
               </span>
