@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import BluebombLogo from "../../assets/img/bluebomb-Icon.svg";
+import { PROBLEM_CATEGORY } from "../../services/problemService";
 import "./Sidebar.css";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-function Sidebar({ isOpen, userNickname: propsNickname }) {
+function Sidebar({
+  isOpen,
+  userNickname: propsNickname,
+  variant,
+  problemSet,
+  currentIndex = 0,
+  problemStates = [],
+  canMoveProblem,
+  moveProblem,
+  getProblemButtonClass,
+}) {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
+  const selectedCategoryId = new URLSearchParams(location.search).get(
+    "categoryId",
+  );
 
   // 닉네임
   const [nickname, setNickname] = useState(() => {
@@ -249,13 +263,67 @@ function Sidebar({ isOpen, userNickname: propsNickname }) {
       <h3 className="sidebar-title">카테고리</h3>
 
       <ul className="sidebar-list">
-        <li className="sidebar-item active">데이터 분석</li>
-        <li className="sidebar-item">머신러닝</li>
-        <li className="sidebar-item">Python</li>
-        <li className="sidebar-item">SQL</li>
-        <li className="sidebar-item">통계</li>
-        <li className="sidebar-item">시각화</li>
-        <li className="sidebar-item">빅데이터</li>
+        <li>
+          <button
+            type="button"
+            className={ `sidebar-item sidebar-button ${
+              selectedCategoryId ? "" : "active"
+            }` }
+            onClick={ () => navigate("/user/problems") }
+          >
+            전체
+          </button>
+        </li>
+
+        { Object.entries(PROBLEM_CATEGORY).map(([categoryId, categoryName]) => (
+          <li key={ categoryId }>
+            <button
+              type="button"
+              className={ `sidebar-item sidebar-button ${
+                selectedCategoryId === categoryId ? "active" : ""
+              }` }
+              onClick={ () =>
+                navigate(`/user/problems?categoryId=${categoryId}`)
+              }
+            >
+              { categoryName }
+            </button>
+          </li>
+        )) }
+      </ul>
+    </div>
+  );
+
+  const ProblemDetailMenu = () => (
+    <div className="sidebar-content problem-detail-sidebar-content">
+      <h3 className="sidebar-title">
+        전체 문제 { currentIndex + 1 }/{ problemSet?.problems?.length ?? 0 }
+      </h3>
+
+      <ul className="sidebar-list">
+        { problemSet?.problems?.map((problem, index) => {
+          const locked = canMoveProblem ? !canMoveProblem(index) : false;
+          const buttonClass = getProblemButtonClass
+            ? getProblemButtonClass(problemStates[index], currentIndex === index)
+            : "";
+
+          return (
+            <li key={ problem.problemId ?? index }>
+              <button
+                type="button"
+                disabled={ locked }
+                className={
+                  `sidebar-item problem-detail-sidebar-item ${buttonClass} ${
+                    locked ? "locked-problem" : ""
+                  }`
+                }
+                onClick={ () => moveProblem?.(index) }
+              >
+                { problem.title }
+              </button>
+            </li>
+          );
+        }) }
       </ul>
     </div>
   );
@@ -290,6 +358,14 @@ function Sidebar({ isOpen, userNickname: propsNickname }) {
       </ul>
     </div>
   );
+
+  if (variant === "problem-detail") {
+    return (
+      <aside className={ `sidebar ${isOpen ? "open" : ""}` }>
+        { ProblemDetailMenu() }
+      </aside>
+    );
+  }
 
   if (!isAdminPath && !isCategory && !isMypage && !isChatPage) {
     return null;

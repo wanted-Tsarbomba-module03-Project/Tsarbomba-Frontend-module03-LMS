@@ -1,44 +1,45 @@
 import { createBrowserRouter } from "react-router-dom";
 
 // [레이아웃]
-import MainLayout from "../layouts/mainlayout";
-import MypageLayout from "../layouts/mypagelayout";
-import AdminLayout from "../layouts/adminlayout";
-import EmptyLayout from "../layouts/emptylayout";
+import MainLayout from "../layouts/MainLayout";
+import MypageLayout from "../layouts/MypageLayout";
+import AdminLayout from "../layouts/AdminLayout";
+import EmptyLayout from "../layouts/EmptyLayout";
 
 // [공통]
-import HomePage from "../pages/common/homepage";
-import ErrorPage from "../pages/common/errorpage";
-import LectureTotalPage from "../pages/common/lecturetotalpage";
-import LectureDetailPage from "../pages/common/lecturedetailpage";
-import ProblemTotalPage from "../pages/common/problemtotalpage";
-import ProblemDetailPage from "../pages/common/problemdetailpage";
+import HomePage from "../pages/common/HomePage";
+import ErrorPage from "../pages/common/ErrorPage";
+import LectureTotalPage from "../pages/common/LectureTotalPage";
+import LectureDetailPage from "../pages/common/LectureDetailPage";
+import ProblemTotalPage from "../pages/common/ProblemTotalPage";
+import ProblemDetailPage from "../pages/common/ProblemDetailPage";
 
 // [인증]
-import LoginPage from "../pages/auth/loginpage";
-import SignupPage from "../pages/auth/signuppage";
-import FindIdPage from "../pages/auth/findidpage";
-import ResetPwPage from "../pages/auth/resetpwpage";
+import LoginPage from "../pages/auth/LoginPage";
+import SignupPage from "../pages/auth/SignupPage";
+import FindIdPage from "../pages/auth/FindIdPage";
+import ResetPwPage from "../pages/auth/ResetPwPage";
 
 // [유저]
-import MyLecturePage from "../pages/user/mypage/mylecturepage";
-import MypageProfile from "../pages/user/mypage/mypageprofile";
-import ProfileEditPage from "../pages/user/mypage/profileeditpage";
-import AuthVerifyPage from "../pages/user/mypage/authverifypage";
-import LectureSolvePage from "../pages/user/lecture/lectursolvepage";
+import MyLecturePage from "../pages/user/mypage/MyLecturePage";
+import MypageProfile from "../pages/user/mypage/MypageProfile";
+import ProfileEditPage from "../pages/user/mypage/ProfileEditPage";
+import AuthVerifyPage from "../pages/user/mypage/AuthVerifyPage";
+import LectureSolvePage from "../pages/user/lecture/LecturSolvePage";
 import IntroducePage from "../pages/user/mypage/IntroducePage";
-import ChatbotPage from "../pages/user/chatbot/GeneralChatPage";
 
 // [관리자]
-import UserTotalPage from "../pages/admin/user/usertotalpage";
-import UserDetailPage from "../pages/admin/user/userdetailpage";
-import LectureRegistPage from "../pages/admin/lecture/lectureregistpage";
-import ProblemRegistPage from "../pages/admin/problem/problemregistpage";
+import UserTotalPage from "../pages/admin/user/UserTotalPage";
+import UserDetailPage from "../pages/admin/user/UserDetailPage";
+import LectureRegistPage from "../pages/admin/lecture/LectureRegistPage";
+import ProblemEditPage from "../pages/admin/problem/ProblemEditPage";
+import ProblemRegistPage from "../pages/admin/problem/ProblemRegistPage";
 import BadgeTotalPage from "../pages/admin/badge/BadgeTotalPage";
 import RulePage from "../pages/admin/rule/RulePage";
 import AlramTotalPage from "../pages/admin/alram/AlramTotalPage";
 import AlramDetailPage from "../pages/admin/alram/AlramDetailPage";
 import GeneralChatPage from "../pages/user/chatbot/GeneralChatPage";
+import ProblemLayout from "../layouts/ProblemLayout";
 // import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
 
 export const router = createBrowserRouter([
@@ -67,12 +68,18 @@ export const router = createBrowserRouter([
       { path: "my-classroom", element: <MyLecturePage /> },
       { path: "lecture/:id/solve", element: <LectureSolvePage /> },
       { path: "problems", element: <ProblemTotalPage /> },
-      { path: "problem/:id", element: <ProblemDetailPage /> },
       { path: "introduce", element: <IntroducePage /> },
       { path: "profile", element: <MypageProfile /> },
       { path: "profile/edit", element: <ProfileEditPage /> },
       { path: "chat", element: <GeneralChatPage /> },
       { path: "chat/:roomId", element: <GeneralChatPage /> },
+    ],
+  },
+  {
+    path: "user",
+    element: <ProblemLayout />,
+    children: [
+      { path: "problem/:id", element: <ProblemDetailPage /> },
     ],
   },
   {
@@ -86,7 +93,7 @@ export const router = createBrowserRouter([
       { path: "lecture/new", element: <LectureRegistPage /> },
       // { path: "lecture/:id/progress", element: <LectureProgressPage /> },
       { path: "problems", element: <ProblemTotalPage /> },
-      { path: "problem/:id", element: <ProblemDetailPage /> },
+      { path: "problem/:id", element: <ProblemEditPage /> },
       { path: "problem/new", element: <ProblemRegistPage /> },
       { path: "badges", element: <BadgeTotalPage /> },
       { path: "rules", element: <RulePage /> },

@@ -1,4 +1,19 @@
-table {
+.list-container {
+  width: 100%;
+}
+
+.list-scroll-area {
+  max-height: min(520px, calc(100vh - 260px));
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.list-scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+.list-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
@@ -10,7 +25,7 @@ table {
   --table-border: #e8e8e8;
 }
 
-thead th {
+.list-table thead th {
   background-color: #f3f4f6;
   height: 50px;
   border-top: 1px solid var(--table-border);
@@ -18,9 +33,12 @@ thead th {
   text-align: center;
   vertical-align: middle;
   font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
-tbody td {
+.list-table tbody td {
   height: 50px;
   border-bottom: 1px solid var(--table-border);
   text-align: center;
@@ -28,16 +46,22 @@ tbody td {
   padding: 0;
 }
 
-tbody tr:hover td {
+.list-table tbody tr:hover td {
   background-color: var(--table-hover);
   cursor: pointer;
 }
 
-td,
-th {
+.list-table td,
+.list-table th {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.list-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
 }
 
 .cell-content {
