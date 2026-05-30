@@ -40,7 +40,8 @@ import AlramTotalPage from "../pages/admin/alram/AlramTotalPage";
 import AlramDetailPage from "../pages/admin/alram/AlramDetailPage";
 import GeneralChatPage from "../pages/user/chatbot/GeneralChatPage";
 import ProblemLayout from "../layouts/ProblemLayout";
-// import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
+import LectureProgressPage from "../pages/admin/lecture/LectureProgressPage";
+import LectureManagementPage from "../pages/admin/lecture/LectureManagementPage";
 
 export const router = createBrowserRouter([
   {
@@ -63,8 +64,8 @@ export const router = createBrowserRouter([
     path: "user",
     element: <MypageLayout />,
     children: [
-      { path: "lectures", element: <LectureTotalPage /> },
-      { path: "lecture/:id", element: <LectureDetailPage /> },
+      { path: "lecture/:id", element: <LectureTotalPage /> },
+      { path: "lecture/:id/:lectureId", element: <LectureDetailPage /> },
       { path: "my-classroom", element: <MyLecturePage /> },
       { path: "lecture/:id/solve", element: <LectureSolvePage /> },
       { path: "problems", element: <ProblemTotalPage /> },
@@ -78,9 +79,7 @@ export const router = createBrowserRouter([
   {
     path: "user",
     element: <ProblemLayout />,
-    children: [
-      { path: "problem/:id", element: <ProblemDetailPage /> },
-    ],
+    children: [{ path: "problem/:id", element: <ProblemDetailPage /> }],
   },
   {
     path: "admin",
@@ -88,10 +87,11 @@ export const router = createBrowserRouter([
     children: [
       { path: "users", element: <UserTotalPage /> },
       { path: "user/:id", element: <UserDetailPage /> },
-      { path: "lectures", element: <LectureTotalPage /> },
-      { path: "lecture/:id", element: <LectureDetailPage /> },
+      { path: "lectures", element: <LectureManagementPage /> },
+      { path: "lecture/:id", element: <LectureTotalPage /> },
+      { path: "lecture/:id/:lectureId", element: <LectureDetailPage /> },
       { path: "lecture/new", element: <LectureRegistPage /> },
-      // { path: "lecture/:id/progress", element: <LectureProgressPage /> },
+      { path: "lecture/:id/progress", element: <LectureProgressPage /> },
       { path: "problems", element: <ProblemTotalPage /> },
       { path: "problem/:id", element: <ProblemEditPage /> },
       { path: "problem/new", element: <ProblemRegistPage /> },
