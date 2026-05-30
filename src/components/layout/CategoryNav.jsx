@@ -7,6 +7,7 @@ function CategoryNav({
   variant = "category",
   onBack,
   onRun,
+  isRunning = false,
   onToggleProblemChat,
   isProblemChatOpen = false,
 }) {
@@ -41,8 +42,9 @@ function CategoryNav({
             <button
               className="category-box active problem-detail-nav-button"
               onClick={onRun}
+              disabled={isRunning}
             >
-              실행하기
+              {isRunning ? "실행 중" : "실행하기"}
             </button>
 
             <button

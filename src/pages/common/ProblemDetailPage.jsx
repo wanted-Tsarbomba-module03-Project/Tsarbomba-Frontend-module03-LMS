@@ -25,6 +25,8 @@ function ProblemDetailPage() {
     activeTab,
     setActiveTab,
     currentHints,
+    executionResult,
+    isRunning,
     submissionResult,
     isSubmitting,
     successModalOpen,
@@ -35,6 +37,7 @@ function ProblemDetailPage() {
     setWarningModalOpen,
     canMoveProblem,
     moveProblem,
+    handleRun,
     handleSubmit,
     getProblemButtonClass,
     handleBackButton,
@@ -62,6 +65,8 @@ function ProblemDetailPage() {
         <CategoryNav
           variant="problem-detail"
           onBack={handleBackButton}
+          onRun={handleRun}
+          isRunning={isRunning}
           onToggleProblemChat={() => setProblemChatOpen((isOpen) => !isOpen)}
           isProblemChatOpen={problemChatOpen}
         />
@@ -88,6 +93,7 @@ function ProblemDetailPage() {
               code={code}
               currentHints={currentHints}
               currentProblem={currentProblem}
+              executionResult={executionResult}
               hintEnabled={hintEnabled[currentIndex]}
               isSubmitting={isSubmitting}
               showHintToast={showHintToast}
